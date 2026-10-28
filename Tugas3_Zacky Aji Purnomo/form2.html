@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Pemesanan Produk</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --violet: #7c3aed; --fuchsia: #d946ef; --blue: #3b82f6; --cyan: #06b6d4;
+      --text: #1f2340; --muted: #6b7280; --line: #e5e7f5; --field: #f7f7fd; --danger: #f43f5e;
+      --grad: linear-gradient(120deg, #6d28d9, #a21caf, #db2777);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 40px 16px; color: var(--text);
+      background: linear-gradient(120deg, #1e1b4b, #5b21b6, #a21caf, #2563eb, #0e7490, #1e1b4b);
+      background-size: 400% 400%; animation: move 18s ease infinite;
+    }
+    @keyframes move { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+    .card { width: 100%; max-width: 1060px; padding: 3px; border-radius: 30px; background: linear-gradient(120deg, #06b6d4, #7c3aed, #d946ef, #06b6d4); background-size: 300% 300%; animation: move 8s linear infinite; box-shadow: 0 30px 80px rgba(15,10,50,.5); }
+    form { display: grid; grid-template-columns: 1fr 340px; gap: 8px; background: #fff; border-radius: 27px; }
+    .main { padding: 44px 40px 40px 46px; }
+
+    .head { margin-bottom: 34px; }
+    .head .badge { width: 58px; height: 58px; margin-bottom: 16px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; color: #fff; background: linear-gradient(135deg, var(--violet), var(--fuchsia)); box-shadow: 0 10px 24px rgba(124,58,237,.4); }
+    h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -.02em; background: linear-gradient(90deg, #6d28d9, #c026d3, #2563eb, #6d28d9); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+    @keyframes shine { to { background-position: 250% 0; } }
+    .head p { margin-top: 8px; color: var(--muted); font-size: .95rem; }
+
+    .sec { margin-bottom: 34px; }
+    .sec > h2 { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 1.05rem; font-weight: 800; }
+    .sec > h2 b { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; font-size: .85rem; color: #fff; background: var(--grad); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+    .field { margin-bottom: 22px; }
+    .field > label, .field > .label { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 600; }
+    .field > label small, .field > .label small { font-weight: 400; color: var(--muted); }
+    .req::after { content: " *"; color: #db2777; }
+
+    .input { position: relative; }
+    .input i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #a1a1c4; transition: color .25s; pointer-events: none; }
+    .input input { padding-left: 46px; }
+    .input:focus-within i { color: var(--violet); }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; font: inherit; color: var(--text); background: var(--field); border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 16px; outline: none; transition: border-color .25s, box-shadow .25s, background .25s; }
+    textarea { resize: vertical; min-height: 100px; }
+    select { appearance: none; cursor: pointer; padding-right: 44px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; }
+    ::placeholder { color: #a3a3c2; }
+    input:hover, select:hover, textarea:hover { border-color: #c4b5fd; }
+    input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--violet); box-shadow: 0 0 0 4px rgba(124,58,237,.16); }
+    input:user-invalid { border-color: var(--danger); }
+    input:user-invalid:focus { box-shadow: 0 0 0 4px rgba(244,63,94,.18); }
+    input:user-valid:not(:placeholder-shown) { border-color: #10b981; }
+    .error { display: none; margin-top: 6px; font-size: .8rem; color: var(--danger); }
+    .field:has(input:user-invalid) .error { display: block; }
+
+    /* Kartu varian */
+    .vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .vgrid input { position: absolute; opacity: 0; pointer-events: none; }
+    .vgrid label { display: block; height: 100%; padding: 16px; border: 1.5px solid var(--line); border-radius: 16px; background: var(--field); cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+    .vgrid strong { display: block; font-size: 1rem; }
+    .vgrid span { display: block; margin-top: 4px; font-weight: 700; color: #7c3aed; }
+    .vgrid small { display: block; margin-top: 2px; font-size: .78rem; color: var(--muted); }
+    .vgrid label:hover { border-color: #c4b5fd; }
+    .vgrid input:checked + label { color: #fff; border-color: transparent; background: var(--grad); background-size: 200% 200%; animation: move 5s ease infinite; box-shadow: 0 10px 24px rgba(147,51,234,.35); }
+    .vgrid input:checked + label span, .vgrid input:checked + label small { color: #fff; }
+    .vgrid input:checked + label small { opacity: .85; }
+    .vgrid input:focus-visible + label { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    /* Pilihan chip */
+    .options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+    .option label { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--field); font-size: .9rem; font-weight: 500; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+    .option label::before { content: ""; width: 17px; height: 17px; flex: none; border-radius: 50%; border: 2px solid #a1a1c4; background: #fff; transition: all .2s; }
+    .option label:hover { border-color: #c4b5fd; }
+    .option input:checked + label { color: #fff; border-color: transparent; background: var(--grad); background-size: 200% 200%; animation: move 5s ease infinite; box-shadow: 0 8px 20px rgba(147,51,234,.3); }
+    .option input:checked + label::before { border-color: #fff; background: #fff; box-shadow: inset 0 0 0 4px var(--violet); }
+    .option input:focus-visible + label { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    input[type="file"] { width: 100%; font: inherit; font-size: .9rem; color: var(--muted); background: var(--field); border: 1.5px dashed #c4b5fd; border-radius: 14px; padding: 10px; cursor: pointer; transition: border-color .25s; }
+    input[type="file"]:hover { border-color: var(--violet); }
+    input[type="file"]::file-selector-button { font: inherit; font-weight: 600; color: #fff; border: 0; border-radius: 10px; padding: 9px 16px; margin-right: 14px; cursor: pointer; background: var(--grad); }
+    .hint { margin-top: 6px; font-size: .8rem; color: var(--muted); }
+    form:has(#b7:checked) .upload { display: none; }
+
+    /* Ringkasan pesanan */
+    .sum { position: sticky; top: 24px; align-self: start; margin: 14px 14px 14px 0; padding: 30px 26px 26px; border-radius: 22px; color: #fff; background: linear-gradient(160deg, #1e1b4b, #4c1d95 55%, #86198f); background-size: 200% 200%; animation: move 14s ease infinite; box-shadow: 0 20px 44px rgba(76,29,149,.35); }
+    .sum h2 { font-size: 1.15rem; font-weight: 800; }
+    .sum .item { margin-top: 4px; font-size: .9rem; color: #ddd6fe; }
+    .item::after { content: var(--item); }
+    .stok { margin: 20px 0 22px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.1); }
+    .stok .top { display: flex; justify-content: space-between; font-size: .88rem; }
+    .stok .bar { height: 8px; margin: 10px 0 8px; border-radius: 99px; background: rgba(255,255,255,.18); overflow: hidden; }
+    .stok .bar i { display: block; height: 100%; width: var(--w, 100%); border-radius: 99px; background: linear-gradient(90deg, #22d3ee, #a78bfa, #f0abfc); transition: width .5s; }
+    .stok small { font-size: .78rem; color: #ddd6fe; }
+    .after::after { content: var(--after); }
+    .rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,.22); font-size: .92rem; }
+    .rows dt small { display: block; margin-top: 3px; font-size: .75rem; color: #ddd6fe; }
+    .rows dd { font-weight: 700; white-space: nowrap; }
+    .tot::after { content: var(--tot); }
+    .ong::after { content: var(--ong); }
+    .ber::after { content: var(--ber); }
+    .ku::after { content: var(--ku); }
+    .gt { margin-top: 20px; }
+    .gt span { font-size: .88rem; color: #ddd6fe; }
+    .gt strong { display: block; margin-top: 2px; font-size: 2rem; font-weight: 800; letter-spacing: -.02em; background: linear-gradient(90deg, #fff, #f5d0fe, #a5f3fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .gtv::after { content: var(--gt); }
+    .note { margin-top: 14px; font-size: .8rem; line-height: 1.5; color: #ddd6fe; }
+    .note .nc { display: none; }
+    form:has(#b7:checked) .note .nn { display: none; }
+    form:has(#b7:checked) .note .nc { display: inline; }
+    form:has(#b7:checked) .ku::after { content: "Rp 0 (COD)"; }
+    form:has(#b7:checked) .gtv::after { content: var(--gtc); }
+
+    .actions { margin-top: 8px; }
+    .btn { width: 100%; font: inherit; font-weight: 700; font-size: 1.02rem; color: #fff; border: 0; border-radius: 16px; padding: 17px 24px; cursor: pointer; background: linear-gradient(120deg, #6d28d9, #c026d3, #2563eb, #06b6d4, #6d28d9); background-size: 300% 300%; animation: move 6s ease infinite; box-shadow: 0 14px 30px rgba(109,40,217,.4); transition: transform .2s, box-shadow .2s; }
+    .btn i { margin-right: 8px; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 38px rgba(147,51,234,.5); }
+    .btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    /* Pop-up sukses (:target) */
+    .modal { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; padding: 20px; background: rgba(15,10,50,.65); backdrop-filter: blur(6px); }
+    .modal:target { display: grid; }
+    .modal .box { width: 100%; max-width: 410px; padding: 38px 32px 30px; text-align: center; border-radius: 24px; background: #fff; box-shadow: 0 30px 80px rgba(0,0,0,.5); animation: pop .45s cubic-bezier(.2,1.3,.4,1); }
+    @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+    .modal .ok { width: 72px; height: 72px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center; font-size: 34px; color: #fff; background: linear-gradient(135deg, #10b981, #06b6d4); box-shadow: 0 12px 28px rgba(16,185,129,.4); }
+    .modal h2 { font-size: 1.35rem; font-weight: 800; }
+    .modal p { margin: 8px 0 24px; color: var(--muted); font-size: .94rem; }
+    .modal a { display: inline-block; padding: 13px 30px; border-radius: 14px; color: #fff; font-weight: 700; text-decoration: none; background: var(--grad); }
+    .modal a:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    @media (max-width: 920px) {
+      form { grid-template-columns: 1fr; }
+      .main { padding: 34px 24px 10px; }
+      .sum { position: static; margin: 0 14px 14px; }
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.5rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+    /* Perhitungan otomatis tanpa JavaScript: tiap kombinasi pilihan memberi nilai ke variabel CSS */
+    form:has(#jml [value="1"]:checked){--after:"Setelah pesananmu, sisa 99 produk";--w:99%}
+    form:has(#jml [value="2"]:checked){--after:"Setelah pesananmu, sisa 98 produk";--w:98%}
+    form:has(#jml [value="3"]:checked){--after:"Setelah pesananmu, sisa 97 produk";--w:97%}
+    form:has(#jml [value="4"]:checked){--after:"Setelah pesananmu, sisa 96 produk";--w:96%}
+    form:has(#jml [value="5"]:checked){--after:"Setelah pesananmu, sisa 95 produk";--w:95%}
+    form:has(#jml [value="6"]:checked){--after:"Setelah pesananmu, sisa 94 produk";--w:94%}
+    form:has(#jml [value="7"]:checked){--after:"Setelah pesananmu, sisa 93 produk";--w:93%}
+    form:has(#jml [value="8"]:checked){--after:"Setelah pesananmu, sisa 92 produk";--w:92%}
+    form:has(#jml [value="9"]:checked){--after:"Setelah pesananmu, sisa 91 produk";--w:91%}
+    form:has(#jml [value="10"]:checked){--after:"Setelah pesananmu, sisa 90 produk";--w:90%}
+    form:has(#v1:checked):has(#jml [value="1"]:checked){--item:"1 × Rinso";--tot:"Rp 18.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked){--item:"2 × Rinso";--tot:"Rp 36.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked){--item:"3 × Rinso";--tot:"Rp 54.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked){--item:"4 × Rinso";--tot:"Rp 72.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked){--item:"5 × Rinso";--tot:"Rp 90.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked){--item:"6 × Rinso";--tot:"Rp 108.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked){--item:"7 × Rinso";--tot:"Rp 126.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked){--item:"8 × Rinso";--tot:"Rp 144.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked){--item:"9 × Rinso";--tot:"Rp 162.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked){--item:"10 × Rinso";--tot:"Rp 180.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked){--item:"1 × Close Up";--tot:"Rp 12.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked){--item:"2 × Close Up";--tot:"Rp 24.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked){--item:"3 × Close Up";--tot:"Rp 36.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked){--item:"4 × Close Up";--tot:"Rp 48.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked){--item:"5 × Close Up";--tot:"Rp 60.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked){--item:"6 × Close Up";--tot:"Rp 72.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked){--item:"7 × Close Up";--tot:"Rp 84.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked){--item:"8 × Close Up";--tot:"Rp 96.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked){--item:"9 × Close Up";--tot:"Rp 108.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked){--item:"10 × Close Up";--tot:"Rp 120.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked){--item:"1 × Pepsodent";--tot:"Rp 10.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked){--item:"2 × Pepsodent";--tot:"Rp 20.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked){--item:"3 × Pepsodent";--tot:"Rp 30.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked){--item:"4 × Pepsodent";--tot:"Rp 40.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked){--item:"5 × Pepsodent";--tot:"Rp 50.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked){--item:"6 × Pepsodent";--tot:"Rp 60.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked){--item:"7 × Pepsodent";--tot:"Rp 70.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked){--item:"8 × Pepsodent";--tot:"Rp 80.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked){--item:"9 × Pepsodent";--tot:"Rp 90.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked){--item:"10 × Pepsodent";--tot:"Rp 100.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 147";--gt:"Rp 27.147";--gtc:"Rp 27.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 166";--gt:"Rp 30.166";--gtc:"Rp 30.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 185";--gt:"Rp 43.185";--gtc:"Rp 43.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 194";--gt:"Rp 54.194";--gtc:"Rp 54.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 213";--gt:"Rp 60.213";--gtc:"Rp 60.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 232";--gt:"Rp 86.232";--gtc:"Rp 86.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 9.000";--ong:"Rp 27.000";--ku:"Rp 241";--gt:"Rp 81.241";--gtc:"Rp 81.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 12.000";--ong:"Rp 36.000";--ku:"Rp 260";--gt:"Rp 90.260";--gtc:"Rp 90.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 25.000";--ong:"Rp 75.000";--ku:"Rp 279";--gt:"Rp 129.279";--gtc:"Rp 129.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 9.000";--ong:"Rp 36.000";--ku:"Rp 288";--gt:"Rp 108.288";--gtc:"Rp 108.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 12.000";--ong:"Rp 48.000";--ku:"Rp 307";--gt:"Rp 120.307";--gtc:"Rp 120.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 25.000";--ong:"Rp 100.000";--ku:"Rp 326";--gt:"Rp 172.326";--gtc:"Rp 172.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 9.000";--ong:"Rp 45.000";--ku:"Rp 335";--gt:"Rp 135.335";--gtc:"Rp 135.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 12.000";--ong:"Rp 60.000";--ku:"Rp 354";--gt:"Rp 150.354";--gtc:"Rp 150.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 25.000";--ong:"Rp 125.000";--ku:"Rp 373";--gt:"Rp 215.373";--gtc:"Rp 215.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 9.000";--ong:"Rp 54.000";--ku:"Rp 382";--gt:"Rp 162.382";--gtc:"Rp 162.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 12.000";--ong:"Rp 72.000";--ku:"Rp 401";--gt:"Rp 180.401";--gtc:"Rp 180.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 25.000";--ong:"Rp 150.000";--ku:"Rp 420";--gt:"Rp 258.420";--gtc:"Rp 258.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 9.000";--ong:"Rp 63.000";--ku:"Rp 429";--gt:"Rp 189.429";--gtc:"Rp 189.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 12.000";--ong:"Rp 84.000";--ku:"Rp 448";--gt:"Rp 210.448";--gtc:"Rp 210.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 25.000";--ong:"Rp 175.000";--ku:"Rp 467";--gt:"Rp 301.467";--gtc:"Rp 301.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 9.000";--ong:"Rp 72.000";--ku:"Rp 476";--gt:"Rp 216.476";--gtc:"Rp 216.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 12.000";--ong:"Rp 96.000";--ku:"Rp 495";--gt:"Rp 240.495";--gtc:"Rp 240.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 25.000";--ong:"Rp 200.000";--ku:"Rp 514";--gt:"Rp 344.514";--gtc:"Rp 344.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 9.000";--ong:"Rp 81.000";--ku:"Rp 523";--gt:"Rp 243.523";--gtc:"Rp 243.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 12.000";--ong:"Rp 108.000";--ku:"Rp 542";--gt:"Rp 270.542";--gtc:"Rp 270.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 25.000";--ong:"Rp 225.000";--ku:"Rp 561";--gt:"Rp 387.561";--gtc:"Rp 387.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 9.000";--ong:"Rp 81.000";--ku:"Rp 570";--gt:"Rp 261.570";--gtc:"Rp 261.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 12.000";--ong:"Rp 108.000";--ku:"Rp 589";--gt:"Rp 288.589";--gtc:"Rp 288.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 25.000";--ong:"Rp 225.000";--ku:"Rp 608";--gt:"Rp 405.608";--gtc:"Rp 405.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 278";--gt:"Rp 21.278";--gtc:"Rp 21.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 297";--gt:"Rp 24.297";--gtc:"Rp 24.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 316";--gt:"Rp 37.316";--gtc:"Rp 37.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 325";--gt:"Rp 33.325";--gtc:"Rp 33.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 344";--gt:"Rp 36.344";--gtc:"Rp 36.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 363";--gt:"Rp 49.363";--gtc:"Rp 49.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 372";--gt:"Rp 45.372";--gtc:"Rp 45.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 391";--gt:"Rp 48.391";--gtc:"Rp 48.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 410";--gt:"Rp 61.410";--gtc:"Rp 61.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 419";--gt:"Rp 57.419";--gtc:"Rp 57.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 438";--gt:"Rp 60.438";--gtc:"Rp 60.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 457";--gt:"Rp 73.457";--gtc:"Rp 73.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 466";--gt:"Rp 69.466";--gtc:"Rp 69.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 485";--gt:"Rp 72.485";--gtc:"Rp 72.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 504";--gt:"Rp 85.504";--gtc:"Rp 85.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 513";--gt:"Rp 81.513";--gtc:"Rp 81.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 532";--gt:"Rp 84.532";--gtc:"Rp 84.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 551";--gt:"Rp 97.551";--gtc:"Rp 97.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 560";--gt:"Rp 102.560";--gtc:"Rp 102.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 579";--gt:"Rp 108.579";--gtc:"Rp 108.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 598";--gt:"Rp 134.598";--gtc:"Rp 134.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 607";--gt:"Rp 114.607";--gtc:"Rp 114.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 626";--gt:"Rp 120.626";--gtc:"Rp 120.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 645";--gt:"Rp 146.645";--gtc:"Rp 146.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 654";--gt:"Rp 126.654";--gtc:"Rp 126.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 673";--gt:"Rp 132.673";--gtc:"Rp 132.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 692";--gt:"Rp 158.692";--gtc:"Rp 158.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 701";--gt:"Rp 138.701";--gtc:"Rp 138.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 720";--gt:"Rp 144.720";--gtc:"Rp 144.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 739";--gt:"Rp 170.739";--gtc:"Rp 170.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 409";--gt:"Rp 19.409";--gtc:"Rp 19.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 428";--gt:"Rp 22.428";--gtc:"Rp 22.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 447";--gt:"Rp 35.447";--gtc:"Rp 35.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 456";--gt:"Rp 29.456";--gtc:"Rp 29.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 475";--gt:"Rp 32.475";--gtc:"Rp 32.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 494";--gt:"Rp 45.494";--gtc:"Rp 45.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 503";--gt:"Rp 39.503";--gtc:"Rp 39.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 522";--gt:"Rp 42.522";--gtc:"Rp 42.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 541";--gt:"Rp 55.541";--gtc:"Rp 55.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 550";--gt:"Rp 49.550";--gtc:"Rp 49.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 569";--gt:"Rp 52.569";--gtc:"Rp 52.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 588";--gt:"Rp 65.588";--gtc:"Rp 65.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 597";--gt:"Rp 59.597";--gtc:"Rp 59.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 616";--gt:"Rp 62.616";--gtc:"Rp 62.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 635";--gt:"Rp 75.635";--gtc:"Rp 75.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 644";--gt:"Rp 78.644";--gtc:"Rp 78.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 663";--gt:"Rp 84.663";--gtc:"Rp 84.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 682";--gt:"Rp 110.682";--gtc:"Rp 110.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 691";--gt:"Rp 88.691";--gtc:"Rp 88.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 710";--gt:"Rp 94.710";--gtc:"Rp 94.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 729";--gt:"Rp 120.729";--gtc:"Rp 120.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 738";--gt:"Rp 98.738";--gtc:"Rp 98.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 757";--gt:"Rp 104.757";--gtc:"Rp 104.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 776";--gt:"Rp 130.776";--gtc:"Rp 130.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 785";--gt:"Rp 108.785";--gtc:"Rp 108.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 804";--gt:"Rp 114.804";--gtc:"Rp 114.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 823";--gt:"Rp 140.823";--gtc:"Rp 140.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 832";--gt:"Rp 118.832";--gtc:"Rp 118.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 851";--gt:"Rp 124.851";--gtc:"Rp 124.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 870";--gt:"Rp 150.870";--gtc:"Rp 150.000"}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <form action="#sukses" method="get">
+      <div class="main">
+        <div class="head">
+          <div class="badge"><i class="fa fa-shopping-bag"></i></div>
+          <h1>Formulir Pemesanan Produk</h1>
+          <p>Lengkapi data pesananmu. Total harga dan ongkos kirim terhitung otomatis di ringkasan.</p>
+        </div>
+
+        <div class="sec">
+          <h2><b>1</b>Data pemesan</h2>
+          <div class="field">
+            <label for="nama" class="req">Nama lengkap</label>
+            <div class="input"><i class="fa fa-address-card"></i>
+              <input id="nama" name="nama" type="text" placeholder="Nama sesuai identitas" required minlength="3" autocomplete="name">
+            </div>
+            <p class="error">Nama minimal 3 huruf.</p>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="wa" class="req">Nomor WhatsApp/HP</label>
+              <div class="input"><i class="fa fa-phone-square"></i>
+                <input id="wa" name="wa" type="tel" placeholder="08xxxxxxxxxx" required pattern="08[0-9]{8,12}" autocomplete="tel">
+              </div>
+              <p class="error">Format nomor: 08xxxxxxxxxx.</p>
+            </div>
+            <div class="field">
+              <label for="email" class="req">Gmail</label>
+              <div class="input"><i class="fa fa-envelope"></i>
+                <input id="email" name="email" type="email" placeholder="nama@gmail.com" required pattern="[a-zA-Z0-9._%+\-]+@gmail\.com" autocomplete="email">
+              </div>
+              <p class="error">Gunakan alamat Gmail yang valid.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>2</b>Produk</h2>
+          <div class="field">
+            <label for="produk" class="req">Nama produk</label>
+            <div class="input"><i class="fa fa-edit"></i>
+              <input id="produk" name="produk" type="text" placeholder="Contoh: Paket kebersihan bulanan" required>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label req">Varian</span>
+            <div class="vgrid">
+              <div><input type="radio" name="varian" id="v1" value="Rinso" checked><label for="v1"><strong>Rinso</strong><span>Rp 18.000</span><small>900 g per pcs</small></label></div>
+              <div><input type="radio" name="varian" id="v2" value="Close Up"><label for="v2"><strong>Close Up</strong><span>Rp 12.000</span><small>160 g per pcs</small></label></div>
+              <div><input type="radio" name="varian" id="v3" value="Pepsodent"><label for="v3"><strong>Pepsodent</strong><span>Rp 10.000</span><small>190 g per pcs</small></label></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="jml">Jumlah <small>(maksimal 10 per pesanan)</small></label>
+            <select id="jml" name="jumlah">
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>3</b>Pengiriman</h2>
+          <div class="field">
+            <label for="alamat" class="req">Alamat lengkap</label>
+            <div class="input"><i class="fa fa-location-arrow"></i>
+              <input id="alamat" name="alamat" type="text" placeholder="Jalan, nomor, RT/RW, kelurahan, kecamatan, kode pos" required minlength="10">
+            </div>
+            <p class="error">Tulis alamat selengkapnya (minimal 10 karakter).</p>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="lok">Wilayah tujuan <small>(menentukan tarif per kg)</small></label>
+              <select id="lok" name="wilayah">
+                <option value="1">Jawa Timur</option>
+                <option value="2">Pulau Jawa lainnya</option>
+                <option value="3">Luar Pulau Jawa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="kurir">Kurir/ekspedisi</label>
+              <select id="kurir" name="kurir">
+                <option>JNE</option><option>J&amp;T</option><option>SiCepat</option><option>Paxel</option>
+                <option>GoSend / Grab / ShopeeExpress Instant</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Jenis layanan</span>
+            <div class="options">
+              <div class="option"><input type="radio" name="layanan" id="ly1" value="Reguler" checked><label for="ly1">Reguler</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly2" value="Same Day"><label for="ly2">Same Day</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly3" value="Instant"><label for="ly3">Instant</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly4" value="Cargo"><label for="ly4">Cargo</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>4</b>Pembayaran</h2>
+          <div class="field">
+            <span class="label req">Metode pembayaran</span>
+            <div class="options">
+              <div class="option"><input type="radio" name="bayar" id="b1" value="Transfer Bank" required><label for="b1">Transfer Bank (BCA, Mandiri, dll.)</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b2" value="Gopay"><label for="b2">Gopay</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b3" value="OVO"><label for="b3">OVO</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b4" value="ShopeePay"><label for="b4">ShopeePay</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b5" value="Dana"><label for="b5">Dana</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b6" value="QRIS"><label for="b6">QRIS</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b7" value="COD"><label for="b7">COD</label></div>
+            </div>
+          </div>
+          <div class="field upload">
+            <label for="struk">Upload struk/screenshot pembayaran</label>
+            <input id="struk" name="struk" type="file" accept="image/*,.pdf">
+            <p class="hint">Unggah bukti setelah membayar sesuai Grand Total. Tidak perlu untuk COD.</p>
+          </div>
+          <div class="field">
+            <label for="note">Note <small>(opsional)</small></label>
+            <textarea id="note" name="note" rows="5" placeholder="Pesan untuk penjual atau kurir"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <aside class="sum" aria-label="Ringkasan pesanan">
+        <h2>Ringkasan pesanan</h2>
+        <p class="item"></p>
+        <div class="stok">
+          <div class="top"><span>Sisa stok</span><b>100 produk</b></div>
+          <div class="bar"><i></i></div>
+          <small class="after"></small>
+        </div>
+        <dl class="rows">
+          <div><dt>Total harga produk</dt><dd class="tot"></dd></div>
+          <div><dt>Ongkos kirim<small class="ber"></small></dt><dd class="ong"></dd></div>
+          <div><dt>Kode unik</dt><dd class="ku"></dd></div>
+        </dl>
+        <div class="gt"><span>Grand total</span><strong class="gtv"></strong></div>
+        <p class="note">
+          <span class="nn">Transfer tepat sesuai Grand total, termasuk kode unik, supaya pembayaran mudah dicek.</span>
+          <span class="nc">Bayar tunai ke kurir saat barang tiba. COD tidak memakai kode unik.</span>
+        </p>
+        <div class="actions" style="margin-top:22px"><button type="submit" class="btn"><i class="fa fa-paper-plane"></i>Kirim pesanan</button></div>
+      </aside>
+    </form>
+  </div>
+
+  <div class="modal" id="sukses" role="dialog" aria-labelledby="judul-sukses">
+    <div class="box">
+      <div class="ok"><i class="fa fa-check"></i></div>
+      <h2 id="judul-sukses">Pesanan terkirim</h2>
+      <p>Terima kasih. Selesaikan pembayaran sesuai Grand total, lalu unggah bukti pembayaran jika belum.</p>
+      <a href="#">Tutup</a>
+    </div>
+  </div>
+</body>
+</html>
+</body>
+</html>
