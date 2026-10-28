@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Pemesanan Produk</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --violet: #7c3aed; --fuchsia: #d946ef; --blue: #3b82f6; --cyan: #06b6d4;
+      --text: #1f2340; --muted: #6b7280; --line: #e5e7f5; --field: #f7f7fd; --danger: #f43f5e;
+      --grad: linear-gradient(120deg, #6d28d9, #a21caf, #db2777);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 40px 16px; color: var(--text);
+      background: linear-gradient(120deg, #1e1b4b, #5b21b6, #a21caf, #2563eb, #0e7490, #1e1b4b);
+      background-size: 400% 400%; animation: move 18s ease infinite;
+    }
+    @keyframes move { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+    .card { width: 100%; max-width: 1060px; padding: 3px; border-radius: 30px; background: linear-gradient(120deg, #06b6d4, #7c3aed, #d946ef, #06b6d4); background-size: 300% 300%; animation: move 8s linear infinite; box-shadow: 0 30px 80px rgba(15,10,50,.5); }
+    form { display: grid; grid-template-columns: 1fr 340px; gap: 8px; background: #fff; border-radius: 27px; }
+    .main { padding: 44px 40px 40px 46px; }
+
+    .head { margin-bottom: 34px; }
+    .head .badge { width: 58px; height: 58px; margin-bottom: 16px; border-radius: 18px; display: grid; place-items: center; font-size: 26px; color: #fff; background: linear-gradient(135deg, var(--violet), var(--fuchsia)); box-shadow: 0 10px 24px rgba(124,58,237,.4); }
+    h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -.02em; background: linear-gradient(90deg, #6d28d9, #c026d3, #2563eb, #6d28d9); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+    @keyframes shine { to { background-position: 250% 0; } }
+    .head p { margin-top: 8px; color: var(--muted); font-size: .95rem; }
+
+    .sec { margin-bottom: 34px; }
+    .sec > h2 { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; font-size: 1.05rem; font-weight: 800; }
+    .sec > h2 b { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; font-size: .85rem; color: #fff; background: var(--grad); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22px; }
+    .field { margin-bottom: 22px; }
+    .field > label, .field > .label { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 600; }
+    .field > label small, .field > .label small { font-weight: 400; color: var(--muted); }
+    .req::after { content: " *"; color: #db2777; }
+
+    .input { position: relative; }
+    .input i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #a1a1c4; transition: color .25s; pointer-events: none; }
+    .input input { padding-left: 46px; }
+    .input:focus-within i { color: var(--violet); }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea { width: 100%; font: inherit; color: var(--text); background: var(--field); border: 1.5px solid var(--line); border-radius: 14px; padding: 13px 16px; outline: none; transition: border-color .25s, box-shadow .25s, background .25s; }
+    textarea { resize: vertical; min-height: 100px; }
+    select { appearance: none; cursor: pointer; padding-right: 44px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%237c3aed' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 18px center; }
+    ::placeholder { color: #a3a3c2; }
+    input:hover, select:hover, textarea:hover { border-color: #c4b5fd; }
+    input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--violet); box-shadow: 0 0 0 4px rgba(124,58,237,.16); }
+    input:user-invalid { border-color: var(--danger); }
+    input:user-invalid:focus { box-shadow: 0 0 0 4px rgba(244,63,94,.18); }
+    input:user-valid:not(:placeholder-shown) { border-color: #10b981; }
+    .error { display: none; margin-top: 6px; font-size: .8rem; color: var(--danger); }
+    .field:has(input:user-invalid) .error { display: block; }
+
+    /* Kartu varian */
+    .vgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .vgrid input { position: absolute; opacity: 0; pointer-events: none; }
+    .vgrid label { display: block; height: 100%; padding: 16px; border: 1.5px solid var(--line); border-radius: 16px; background: var(--field); cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+    .vgrid strong { display: block; font-size: 1rem; }
+    .vgrid span { display: block; margin-top: 4px; font-weight: 700; color: #7c3aed; }
+    .vgrid small { display: block; margin-top: 2px; font-size: .78rem; color: var(--muted); }
+    .vgrid label:hover { border-color: #c4b5fd; }
+    .vgrid input:checked + label { color: #fff; border-color: transparent; background: var(--grad); background-size: 200% 200%; animation: move 5s ease infinite; box-shadow: 0 10px 24px rgba(147,51,234,.35); }
+    .vgrid input:checked + label span, .vgrid input:checked + label small { color: #fff; }
+    .vgrid input:checked + label small { opacity: .85; }
+    .vgrid input:focus-visible + label { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    /* Pilihan chip */
+    .options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .option input { position: absolute; opacity: 0; pointer-events: none; }
+    .option label { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--field); font-size: .9rem; font-weight: 500; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+    .option label::before { content: ""; width: 17px; height: 17px; flex: none; border-radius: 50%; border: 2px solid #a1a1c4; background: #fff; transition: all .2s; }
+    .option label:hover { border-color: #c4b5fd; }
+    .option input:checked + label { color: #fff; border-color: transparent; background: var(--grad); background-size: 200% 200%; animation: move 5s ease infinite; box-shadow: 0 8px 20px rgba(147,51,234,.3); }
+    .option input:checked + label::before { border-color: #fff; background: #fff; box-shadow: inset 0 0 0 4px var(--violet); }
+    .option input:focus-visible + label { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    input[type="file"] { width: 100%; font: inherit; font-size: .9rem; color: var(--muted); background: var(--field); border: 1.5px dashed #c4b5fd; border-radius: 14px; padding: 10px; cursor: pointer; transition: border-color .25s; }
+    input[type="file"]:hover { border-color: var(--violet); }
+    input[type="file"]::file-selector-button { font: inherit; font-weight: 600; color: #fff; border: 0; border-radius: 10px; padding: 9px 16px; margin-right: 14px; cursor: pointer; background: var(--grad); }
+    .hint { margin-top: 6px; font-size: .8rem; color: var(--muted); }
+    form:has(#b7:checked) .upload { display: none; }
+
+    /* Ringkasan pesanan */
+    .sum { position: sticky; top: 24px; align-self: start; margin: 14px 14px 14px 0; padding: 30px 26px 26px; border-radius: 22px; color: #fff; background: linear-gradient(160deg, #1e1b4b, #4c1d95 55%, #86198f); background-size: 200% 200%; animation: move 14s ease infinite; box-shadow: 0 20px 44px rgba(76,29,149,.35); }
+    .sum h2 { font-size: 1.15rem; font-weight: 800; }
+    .sum .item { margin-top: 4px; font-size: .9rem; color: #ddd6fe; }
+    .item::after { content: var(--item); }
+    .sum { display: flex; flex-direction: column; max-height: calc(100vh - 48px); padding-bottom: 22px; }
+    .sum-body { flex: 1; min-height: 0; overflow-y: auto; margin-right: -10px; padding-right: 10px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.35) transparent; }
+    .stok { margin: 20px 0 22px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.1); }
+    .stok .top { display: flex; justify-content: space-between; font-size: .88rem; }
+    .stok .bar { height: 8px; margin: 10px 0 8px; border-radius: 99px; background: rgba(255,255,255,.18); overflow: hidden; }
+    .stok .bar i { display: block; height: 100%; width: var(--w, 100%); border-radius: 99px; background: linear-gradient(90deg, #22d3ee, #a78bfa, #f0abfc); transition: width .5s; }
+    .stok small { font-size: .78rem; color: #ddd6fe; }
+    .after::after { content: var(--after); }
+    .eta { display: flex; gap: 14px; align-items: flex-start; margin: -6px 0 18px; padding: 14px 16px; border-radius: 14px; background: rgba(255,255,255,.1); }
+    .eta > i { flex: none; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; font-size: 17px; background: linear-gradient(135deg, #22d3ee, #a78bfa); }
+    .eta span { display: block; font-size: .78rem; color: #ddd6fe; }
+    .eta b { display: block; margin: 2px 0 4px; font-size: .95rem; line-height: 1.35; }
+    .eta small { font-size: .72rem; line-height: 1.4; color: #c4b5fd; }
+    .est::after { content: var(--est); }
+    .eta-hint { display: flex; gap: 8px; align-items: baseline; color: #6d28d9; font-weight: 600; }
+    .eta-hint i { color: #a21caf; }
+    .rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,.22); font-size: .92rem; }
+    .rows dt small { display: block; margin-top: 3px; font-size: .75rem; color: #ddd6fe; }
+    .rows dd { font-weight: 700; white-space: nowrap; }
+    .tot::after { content: var(--tot); }
+    .ong::after { content: var(--ong); }
+    .ber::after { content: var(--ber); }
+    .ku::after { content: var(--ku); }
+    .gt { flex: none; margin-top: 4px; padding-top: 14px; }
+    .gt span { font-size: .88rem; color: #ddd6fe; }
+    .gt strong { display: block; margin-top: 2px; font-size: 2rem; font-weight: 800; letter-spacing: -.02em; background: linear-gradient(90deg, #fff, #f5d0fe, #a5f3fc); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .gtv::after { content: var(--gt); }
+    .note { margin-top: 14px; font-size: .8rem; line-height: 1.5; color: #ddd6fe; }
+    .note .nc { display: none; }
+    form:has(#b7:checked) .note .nn { display: none; }
+    form:has(#b7:checked) .note .nc { display: inline; }
+    form:has(#b7:checked) .ku::after { content: "Rp 0 (COD)"; }
+    form:has(#b7:checked) .gtv::after { content: var(--gtc); }
+
+    .disc::after { content: var(--disc); }
+    .rekv::after { content: var(--rek, "Pilih metode pembayaran"); }
+    .pay { margin-top: 16px; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.1); font-size: .85rem; line-height: 1.45; }
+    .pay span { display: block; font-size: .75rem; color: #ddd6fe; }
+    form:has(#b7:checked) .rekv::after { content: "Bayar tunai ke kurir saat barang tiba"; }
+
+    .bank { display: none; }
+    form:has(#b1:checked) .bank { display: block; }
+    .penerima { display: none; }
+    form:has(#hadiah:checked) .penerima { display: grid; }
+
+    .field > label.switch { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 0; padding: 14px 18px; border: 1.5px solid var(--line); border-radius: 14px; background: var(--field); cursor: pointer; font-weight: 500; font-size: .92rem; transition: border-color .25s, box-shadow .25s; }
+    .field > label.switch:hover { border-color: #c4b5fd; }
+    .field > label.switch:has(input:checked) { border-color: var(--violet); box-shadow: 0 0 0 4px rgba(124,58,237,.14); }
+    .sw-text { display: flex; align-items: center; gap: 12px; }
+    .sw-text > i { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 12px; font-size: 18px; color: #fff; background: var(--grad); }
+    .sw-text small { display: block; margin-top: 2px; font-size: .78rem; font-weight: 400; color: var(--muted); }
+    .switch input { position: absolute; opacity: 0; }
+    .switch .track { flex: none; width: 46px; height: 26px; border-radius: 99px; background: #d4d4e8; position: relative; transition: background .3s; }
+    .switch .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25); transition: transform .3s; }
+    .switch input:checked + .track { background: var(--grad); }
+    .switch input:checked + .track::after { transform: translateX(20px); }
+    .switch input:focus-visible + .track { outline: 3px solid var(--cyan); outline-offset: 2px; }
+
+    .agree { display: flex; align-items: flex-start; gap: 12px; font-size: .9rem; color: var(--muted); cursor: pointer; }
+    .agree input { width: 20px; height: 20px; margin-top: 1px; accent-color: var(--violet); flex: none; cursor: pointer; }
+
+    .actions { flex: none; margin-top: 16px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; }
+    form:not(:has(#setuju:checked)) .btn-send { opacity: .55; filter: grayscale(.5); box-shadow: none; }
+    .btn { width: 100%; font: inherit; font-weight: 700; font-size: 1.02rem; color: #fff; border: 0; border-radius: 16px; padding: 17px 24px; cursor: pointer; background: linear-gradient(120deg, #6d28d9, #c026d3, #2563eb, #06b6d4, #6d28d9); background-size: 300% 300%; animation: move 6s ease infinite; box-shadow: 0 14px 30px rgba(109,40,217,.4); transition: transform .2s, box-shadow .2s; }
+    .btn i { margin-right: 8px; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 18px 38px rgba(147,51,234,.5); }
+    .btn:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+    /* Tombol Ulangi: gaya sekunder, diletakkan setelah .btn agar tidak tertimpa */
+    .btn.btn-reset { width: auto; padding: 17px 16px; white-space: nowrap; color: #ede9fe; background: rgba(255,255,255,.1); border: 1.5px solid rgba(255,255,255,.28); box-shadow: none; animation: none; transition: background .25s, border-color .25s, color .25s; }
+    .btn.btn-reset i { display: inline-block; transition: transform .5s; }
+    .btn.btn-reset:hover { transform: none; color: #fff; background: rgba(244,63,94,.35); border-color: rgba(251,113,133,.8); box-shadow: none; }
+    .btn.btn-reset:hover i { transform: rotate(-360deg); }
+    .btn.btn-reset:active { background: rgba(244,63,94,.55); }
+    .btn.btn-send { min-width: 0; padding: 17px 12px; font-size: .98rem; white-space: nowrap; }
+
+    /* Pop-up sukses (:target) */
+    .modal { position: fixed; inset: 0; z-index: 50; display: none; place-items: center; padding: 20px; background: rgba(15,10,50,.65); backdrop-filter: blur(6px); }
+    .modal:target { display: grid; }
+    .modal .box { width: 100%; max-width: 410px; padding: 38px 32px 30px; text-align: center; border-radius: 24px; background: #fff; box-shadow: 0 30px 80px rgba(0,0,0,.5); animation: pop .45s cubic-bezier(.2,1.3,.4,1); }
+    @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+    .modal .ok { width: 72px; height: 72px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center; font-size: 34px; color: #fff; background: linear-gradient(135deg, #10b981, #06b6d4); box-shadow: 0 12px 28px rgba(16,185,129,.4); }
+    .modal h2 { font-size: 1.35rem; font-weight: 800; }
+    .modal p { margin: 8px 0 24px; color: var(--muted); font-size: .94rem; }
+    .modal a { display: inline-block; padding: 13px 30px; border-radius: 14px; color: #fff; font-weight: 700; text-decoration: none; background: var(--grad); }
+    .modal a:focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+
+    .wa-float { position: fixed; right: 22px; bottom: 22px; z-index: 40; display: flex; align-items: center; height: 56px; padding: 0 17px; border-radius: 99px; color: #fff; text-decoration: none; font-weight: 700; font-size: .92rem; background: #25d366; overflow: hidden; animation: ring 3s ease-out infinite; }
+    .wa-float i { font-size: 30px; line-height: 1; }
+    .wa-float span { max-width: 0; opacity: 0; white-space: nowrap; transition: max-width .35s, opacity .3s, margin .35s; }
+    .wa-float:hover span, .wa-float:focus-visible span { max-width: 160px; opacity: 1; margin-left: 10px; }
+    .wa-float:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+    @keyframes ring { 0% { box-shadow: 0 10px 26px rgba(37,211,102,.5), 0 0 0 0 rgba(37,211,102,.5); } 70%,100% { box-shadow: 0 10px 26px rgba(37,211,102,.5), 0 0 0 18px rgba(37,211,102,0); } }
+
+    @media (max-width: 920px) {
+      form { grid-template-columns: 1fr; }
+      .main { padding: 34px 24px 10px; }
+      .sum { position: static; margin: 0 14px 14px; max-height: none; }
+      .sum-body { overflow: visible; margin-right: 0; padding-right: 0; }
+    }
+    @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.5rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+    /* Perhitungan otomatis tanpa JavaScript: tiap kombinasi pilihan memberi nilai ke variabel CSS */
+    form:has(#jml [value="1"]:checked){--after:"Setelah pesananmu, sisa 99 produk";--w:99%}
+    form:has(#jml [value="2"]:checked){--after:"Setelah pesananmu, sisa 98 produk";--w:98%}
+    form:has(#jml [value="3"]:checked){--after:"Setelah pesananmu, sisa 97 produk";--w:97%}
+    form:has(#jml [value="4"]:checked){--after:"Setelah pesananmu, sisa 96 produk";--w:96%}
+    form:has(#jml [value="5"]:checked){--after:"Setelah pesananmu, sisa 95 produk";--w:95%}
+    form:has(#jml [value="6"]:checked){--after:"Setelah pesananmu, sisa 94 produk";--w:94%}
+    form:has(#jml [value="7"]:checked){--after:"Setelah pesananmu, sisa 93 produk";--w:93%}
+    form:has(#jml [value="8"]:checked){--after:"Setelah pesananmu, sisa 92 produk";--w:92%}
+    form:has(#jml [value="9"]:checked){--after:"Setelah pesananmu, sisa 91 produk";--w:91%}
+    form:has(#jml [value="10"]:checked){--after:"Setelah pesananmu, sisa 90 produk";--w:90%}
+    form:has(#v1:checked):has(#jml [value="1"]:checked){--item:"1 × Rinso";--tot:"Rp 18.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked){--item:"2 × Rinso";--tot:"Rp 36.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked){--item:"3 × Rinso";--tot:"Rp 54.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked){--item:"4 × Rinso";--tot:"Rp 72.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked){--item:"5 × Rinso";--tot:"Rp 90.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked){--item:"6 × Rinso";--tot:"Rp 108.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked){--item:"7 × Rinso";--tot:"Rp 126.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked){--item:"8 × Rinso";--tot:"Rp 144.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked){--item:"9 × Rinso";--tot:"Rp 162.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked){--item:"10 × Rinso";--tot:"Rp 180.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked){--item:"1 × Close Up";--tot:"Rp 12.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked){--item:"2 × Close Up";--tot:"Rp 24.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked){--item:"3 × Close Up";--tot:"Rp 36.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked){--item:"4 × Close Up";--tot:"Rp 48.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked){--item:"5 × Close Up";--tot:"Rp 60.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked){--item:"6 × Close Up";--tot:"Rp 72.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked){--item:"7 × Close Up";--tot:"Rp 84.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked){--item:"8 × Close Up";--tot:"Rp 96.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked){--item:"9 × Close Up";--tot:"Rp 108.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked){--item:"10 × Close Up";--tot:"Rp 120.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked){--item:"1 × Pepsodent";--tot:"Rp 10.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked){--item:"2 × Pepsodent";--tot:"Rp 20.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked){--item:"3 × Pepsodent";--tot:"Rp 30.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked){--item:"4 × Pepsodent";--tot:"Rp 40.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked){--item:"5 × Pepsodent";--tot:"Rp 50.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked){--item:"6 × Pepsodent";--tot:"Rp 60.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked){--item:"7 × Pepsodent";--tot:"Rp 70.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked){--item:"8 × Pepsodent";--tot:"Rp 80.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked){--item:"9 × Pepsodent";--tot:"Rp 90.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked){--item:"10 × Pepsodent";--tot:"Rp 100.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 147"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 166"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 900 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 185"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 194"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 213"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,8 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 232"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 9.000";--ong:"Rp 27.000";--ku:"Rp 241"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 12.000";--ong:"Rp 36.000";--ku:"Rp 260"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 2,7 kg, ditagih 3 kg × Rp 25.000";--ong:"Rp 75.000";--ku:"Rp 279"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 9.000";--ong:"Rp 36.000";--ku:"Rp 288"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 12.000";--ong:"Rp 48.000";--ku:"Rp 307"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 3,6 kg, ditagih 4 kg × Rp 25.000";--ong:"Rp 100.000";--ku:"Rp 326"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 9.000";--ong:"Rp 45.000";--ku:"Rp 335"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 12.000";--ong:"Rp 60.000";--ku:"Rp 354"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 4,5 kg, ditagih 5 kg × Rp 25.000";--ong:"Rp 125.000";--ku:"Rp 373"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 9.000";--ong:"Rp 54.000";--ku:"Rp 382"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 12.000";--ong:"Rp 72.000";--ku:"Rp 401"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 5,4 kg, ditagih 6 kg × Rp 25.000";--ong:"Rp 150.000";--ku:"Rp 420"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 9.000";--ong:"Rp 63.000";--ku:"Rp 429"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 12.000";--ong:"Rp 84.000";--ku:"Rp 448"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 6,3 kg, ditagih 7 kg × Rp 25.000";--ong:"Rp 175.000";--ku:"Rp 467"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 9.000";--ong:"Rp 72.000";--ku:"Rp 476"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 12.000";--ong:"Rp 96.000";--ku:"Rp 495"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 7,2 kg, ditagih 8 kg × Rp 25.000";--ong:"Rp 200.000";--ku:"Rp 514"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 9.000";--ong:"Rp 81.000";--ku:"Rp 523"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 12.000";--ong:"Rp 108.000";--ku:"Rp 542"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 8,1 kg, ditagih 9 kg × Rp 25.000";--ong:"Rp 225.000";--ku:"Rp 561"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 9.000";--ong:"Rp 81.000";--ku:"Rp 570"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 12.000";--ong:"Rp 108.000";--ku:"Rp 589"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 9 kg, ditagih 9 kg × Rp 25.000";--ong:"Rp 225.000";--ku:"Rp 608"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 278"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 297"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 160 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 316"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 325"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 344"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 320 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 363"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 372"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 391"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 480 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 410"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 419"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 438"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 640 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 457"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 466"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 485"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 800 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 504"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 513"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 532"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 960 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 551"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 560"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 579"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,12 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 598"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 607"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 626"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,28 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 645"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 654"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 673"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,44 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 692"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 701"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 720"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,6 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 739"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 409"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 428"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 190 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 447"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 456"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 475"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 380 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 494"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 503"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 522"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 570 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 541"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 550"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 569"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 760 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 588"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 9.000";--ong:"Rp 9.000";--ku:"Rp 597"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 12.000";--ong:"Rp 12.000";--ku:"Rp 616"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 950 g, ditagih 1 kg × Rp 25.000";--ong:"Rp 25.000";--ku:"Rp 635"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 644"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 663"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,14 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 682"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 691"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 710"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,33 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 729"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 738"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 757"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,52 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 776"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 785"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 804"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,71 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 823"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 9.000";--ong:"Rp 18.000";--ku:"Rp 832"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 12.000";--ong:"Rp 24.000";--ku:"Rp 851"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked){--ber:"Berat 1,9 kg, ditagih 2 kg × Rp 25.000";--ong:"Rp 50.000";--ku:"Rp 870"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="1"]:checked):has(#ly1:checked){--est:"JNE Reguler: 1–2 hari kerja"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="1"]:checked):has(#ly2:checked){--est:"JNE Same Day: tiba hari yang sama bila dipesan sebelum pukul 12.00"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="1"]:checked):has(#ly3:checked){--est:"JNE Instant: 1–3 jam setelah dikirim"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="1"]:checked):has(#ly4:checked){--est:"JNE Cargo: 3–4 hari kerja"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="2"]:checked):has(#ly1:checked){--est:"JNE Reguler: 2–3 hari kerja"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="2"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="2"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="2"]:checked):has(#ly4:checked){--est:"JNE Cargo: 4–5 hari kerja"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="3"]:checked):has(#ly1:checked){--est:"JNE Reguler: 3–6 hari kerja"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="3"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="3"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="1"]:checked):has(#lok [value="3"]:checked):has(#ly4:checked){--est:"JNE Cargo: 5–8 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="1"]:checked):has(#ly1:checked){--est:"J&T Reguler: 1–2 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="1"]:checked):has(#ly2:checked){--est:"J&T Same Day: tiba hari yang sama bila dipesan sebelum pukul 12.00"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="1"]:checked):has(#ly3:checked){--est:"J&T Instant: 1–3 jam setelah dikirim"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="1"]:checked):has(#ly4:checked){--est:"J&T Cargo: 3–4 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="2"]:checked):has(#ly1:checked){--est:"J&T Reguler: 2–3 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="2"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="2"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="2"]:checked):has(#ly4:checked){--est:"J&T Cargo: 4–5 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="3"]:checked):has(#ly1:checked){--est:"J&T Reguler: 3–7 hari kerja"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="3"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="3"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="2"]:checked):has(#lok [value="3"]:checked):has(#ly4:checked){--est:"J&T Cargo: 5–9 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="1"]:checked):has(#ly1:checked){--est:"SiCepat Reguler: 1–2 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="1"]:checked):has(#ly2:checked){--est:"SiCepat Same Day: tiba hari yang sama bila dipesan sebelum pukul 12.00"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="1"]:checked):has(#ly3:checked){--est:"SiCepat Instant: 1–3 jam setelah dikirim"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="1"]:checked):has(#ly4:checked){--est:"SiCepat Cargo: 3–4 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="2"]:checked):has(#ly1:checked){--est:"SiCepat Reguler: 2–3 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="2"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="2"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="2"]:checked):has(#ly4:checked){--est:"SiCepat Cargo: 4–5 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="3"]:checked):has(#ly1:checked){--est:"SiCepat Reguler: 3–6 hari kerja"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="3"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="3"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="3"]:checked):has(#lok [value="3"]:checked):has(#ly4:checked){--est:"SiCepat Cargo: 5–8 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="1"]:checked):has(#ly1:checked){--est:"Paxel Reguler: 1–2 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="1"]:checked):has(#ly2:checked){--est:"Paxel Same Day: tiba hari yang sama bila dipesan sebelum pukul 12.00"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="1"]:checked):has(#ly3:checked){--est:"Paxel Instant: 1–3 jam setelah dikirim"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="1"]:checked):has(#ly4:checked){--est:"Paxel Cargo: 3–4 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="2"]:checked):has(#ly1:checked){--est:"Paxel Reguler: 2–3 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="2"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="2"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="2"]:checked):has(#ly4:checked){--est:"Paxel Cargo: 4–5 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="3"]:checked):has(#ly1:checked){--est:"Paxel Reguler: 4–7 hari kerja"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="3"]:checked):has(#ly2:checked){--est:"Same Day tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="3"]:checked):has(#ly3:checked){--est:"Instant tidak tersedia untuk wilayah ini, pilih Reguler atau Cargo"}
+    form:has(#kurir [value="4"]:checked):has(#lok [value="3"]:checked):has(#ly4:checked){--est:"Paxel Cargo: 6–9 hari kerja"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="1"]:checked):has(#ly1:checked){--est:"GoSend / Grab / Shopee Instant: 1–3 jam (khusus dalam kota)"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="1"]:checked):has(#ly2:checked){--est:"GoSend / Grab / Shopee Instant: 1–3 jam (khusus dalam kota)"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="1"]:checked):has(#ly3:checked){--est:"GoSend / Grab / Shopee Instant: 1–3 jam (khusus dalam kota)"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="1"]:checked):has(#ly4:checked){--est:"GoSend / Grab / Shopee Instant: 1–3 jam (khusus dalam kota)"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="2"]:checked):has(#ly1:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="2"]:checked):has(#ly2:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="2"]:checked):has(#ly3:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="2"]:checked):has(#ly4:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="3"]:checked):has(#ly1:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="3"]:checked):has(#ly2:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="3"]:checked):has(#ly3:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#kurir [value="5"]:checked):has(#lok [value="3"]:checked):has(#ly4:checked){--est:"GoSend / Grab / Shopee Instant: tidak tersedia di luar kota, pilih kurir lain"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 27.147";--gtc:"Rp 27.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.800";--gt:"Rp 25.347";--gtc:"Rp 25.200"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 18.147";--gtc:"Rp 18.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 30.166";--gtc:"Rp 30.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.800";--gt:"Rp 28.366";--gtc:"Rp 28.200"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 20.166";--gtc:"Rp 20.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 43.185";--gtc:"Rp 43.000"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.800";--gt:"Rp 41.385";--gtc:"Rp 41.200"}
+    form:has(#v1:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 33.185";--gtc:"Rp 33.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 54.194";--gtc:"Rp 54.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 50.594";--gtc:"Rp 50.400"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 44.194";--gtc:"Rp 44.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 60.213";--gtc:"Rp 60.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 56.613";--gtc:"Rp 56.400"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 50.213";--gtc:"Rp 50.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 86.232";--gtc:"Rp 86.000"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 82.632";--gtc:"Rp 82.400"}
+    form:has(#v1:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 76.232";--gtc:"Rp 76.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 81.241";--gtc:"Rp 81.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.400";--gt:"Rp 75.841";--gtc:"Rp 75.600"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 71.241";--gtc:"Rp 71.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 90.260";--gtc:"Rp 90.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.400";--gt:"Rp 84.860";--gtc:"Rp 84.600"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 80.260";--gtc:"Rp 80.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 129.279";--gtc:"Rp 129.000"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.400";--gt:"Rp 123.879";--gtc:"Rp 123.600"}
+    form:has(#v1:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 119.279";--gtc:"Rp 119.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 108.288";--gtc:"Rp 108.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 101.088";--gtc:"Rp 100.800"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 98.288";--gtc:"Rp 98.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 120.307";--gtc:"Rp 120.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 113.107";--gtc:"Rp 112.800"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 110.307";--gtc:"Rp 110.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 172.326";--gtc:"Rp 172.000"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 165.126";--gtc:"Rp 164.800"}
+    form:has(#v1:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 162.326";--gtc:"Rp 162.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 135.335";--gtc:"Rp 135.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 126.335";--gtc:"Rp 126.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 125.335";--gtc:"Rp 125.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 150.354";--gtc:"Rp 150.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 141.354";--gtc:"Rp 141.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 140.354";--gtc:"Rp 140.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 215.373";--gtc:"Rp 215.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 206.373";--gtc:"Rp 206.000"}
+    form:has(#v1:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 205.373";--gtc:"Rp 205.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 162.382";--gtc:"Rp 162.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 151.582";--gtc:"Rp 151.200"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 152.382";--gtc:"Rp 152.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 180.401";--gtc:"Rp 180.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 169.601";--gtc:"Rp 169.200"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 170.401";--gtc:"Rp 170.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 258.420";--gtc:"Rp 258.000"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 247.620";--gtc:"Rp 247.200"}
+    form:has(#v1:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 248.420";--gtc:"Rp 248.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 189.429";--gtc:"Rp 189.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.600";--gt:"Rp 176.829";--gtc:"Rp 176.400"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 179.429";--gtc:"Rp 179.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 210.448";--gtc:"Rp 210.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.600";--gt:"Rp 197.848";--gtc:"Rp 197.400"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 200.448";--gtc:"Rp 200.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 301.467";--gtc:"Rp 301.000"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.600";--gt:"Rp 288.867";--gtc:"Rp 288.400"}
+    form:has(#v1:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 291.467";--gtc:"Rp 291.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 216.476";--gtc:"Rp 216.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 14.400";--gt:"Rp 202.076";--gtc:"Rp 201.600"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 206.476";--gtc:"Rp 206.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 240.495";--gtc:"Rp 240.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 14.400";--gt:"Rp 226.095";--gtc:"Rp 225.600"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 230.495";--gtc:"Rp 230.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 344.514";--gtc:"Rp 344.000"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 14.400";--gt:"Rp 330.114";--gtc:"Rp 329.600"}
+    form:has(#v1:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 334.514";--gtc:"Rp 334.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 243.523";--gtc:"Rp 243.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 16.200";--gt:"Rp 227.323";--gtc:"Rp 226.800"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 233.523";--gtc:"Rp 233.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 270.542";--gtc:"Rp 270.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 16.200";--gt:"Rp 254.342";--gtc:"Rp 253.800"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 260.542";--gtc:"Rp 260.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 387.561";--gtc:"Rp 387.000"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 16.200";--gt:"Rp 371.361";--gtc:"Rp 370.800"}
+    form:has(#v1:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 377.561";--gtc:"Rp 377.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 261.570";--gtc:"Rp 261.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 18.000";--gt:"Rp 243.570";--gtc:"Rp 243.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 251.570";--gtc:"Rp 251.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 288.589";--gtc:"Rp 288.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 18.000";--gt:"Rp 270.589";--gtc:"Rp 270.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 278.589";--gtc:"Rp 278.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 405.608";--gtc:"Rp 405.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 18.000";--gt:"Rp 387.608";--gtc:"Rp 387.000"}
+    form:has(#v1:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 395.608";--gtc:"Rp 395.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 21.278";--gtc:"Rp 21.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.200";--gt:"Rp 20.078";--gtc:"Rp 19.800"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 12.278";--gtc:"Rp 12.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 24.297";--gtc:"Rp 24.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.200";--gt:"Rp 23.097";--gtc:"Rp 22.800"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 14.297";--gtc:"Rp 14.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 37.316";--gtc:"Rp 37.000"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.200";--gt:"Rp 36.116";--gtc:"Rp 35.800"}
+    form:has(#v2:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 27.316";--gtc:"Rp 27.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 33.325";--gtc:"Rp 33.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.400";--gt:"Rp 30.925";--gtc:"Rp 30.600"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 24.325";--gtc:"Rp 24.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 36.344";--gtc:"Rp 36.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.400";--gt:"Rp 33.944";--gtc:"Rp 33.600"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 26.344";--gtc:"Rp 26.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 49.363";--gtc:"Rp 49.000"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.400";--gt:"Rp 46.963";--gtc:"Rp 46.600"}
+    form:has(#v2:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 39.363";--gtc:"Rp 39.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 45.372";--gtc:"Rp 45.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 41.772";--gtc:"Rp 41.400"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 36.372";--gtc:"Rp 36.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 48.391";--gtc:"Rp 48.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 44.791";--gtc:"Rp 44.400"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 38.391";--gtc:"Rp 38.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 61.410";--gtc:"Rp 61.000"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.600";--gt:"Rp 57.810";--gtc:"Rp 57.400"}
+    form:has(#v2:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 51.410";--gtc:"Rp 51.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 57.419";--gtc:"Rp 57.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.800";--gt:"Rp 52.619";--gtc:"Rp 52.200"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 48.419";--gtc:"Rp 48.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 60.438";--gtc:"Rp 60.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.800";--gt:"Rp 55.638";--gtc:"Rp 55.200"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 50.438";--gtc:"Rp 50.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 73.457";--gtc:"Rp 73.000"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.800";--gt:"Rp 68.657";--gtc:"Rp 68.200"}
+    form:has(#v2:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 63.457";--gtc:"Rp 63.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 69.466";--gtc:"Rp 69.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 63.466";--gtc:"Rp 63.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 60.466";--gtc:"Rp 60.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 72.485";--gtc:"Rp 72.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 66.485";--gtc:"Rp 66.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 62.485";--gtc:"Rp 62.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 85.504";--gtc:"Rp 85.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 79.504";--gtc:"Rp 79.000"}
+    form:has(#v2:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 75.504";--gtc:"Rp 75.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 81.513";--gtc:"Rp 81.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 74.313";--gtc:"Rp 73.800"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 72.513";--gtc:"Rp 72.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 84.532";--gtc:"Rp 84.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 77.332";--gtc:"Rp 76.800"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 74.532";--gtc:"Rp 74.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 97.551";--gtc:"Rp 97.000"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.200";--gt:"Rp 90.351";--gtc:"Rp 89.800"}
+    form:has(#v2:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 87.551";--gtc:"Rp 87.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 102.560";--gtc:"Rp 102.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.400";--gt:"Rp 94.160";--gtc:"Rp 93.600"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 92.560";--gtc:"Rp 92.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 108.579";--gtc:"Rp 108.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.400";--gt:"Rp 100.179";--gtc:"Rp 99.600"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 98.579";--gtc:"Rp 98.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 134.598";--gtc:"Rp 134.000"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.400";--gt:"Rp 126.198";--gtc:"Rp 125.600"}
+    form:has(#v2:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 124.598";--gtc:"Rp 124.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 114.607";--gtc:"Rp 114.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.600";--gt:"Rp 105.007";--gtc:"Rp 104.400"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 104.607";--gtc:"Rp 104.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 120.626";--gtc:"Rp 120.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.600";--gt:"Rp 111.026";--gtc:"Rp 110.400"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 110.626";--gtc:"Rp 110.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 146.645";--gtc:"Rp 146.000"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.600";--gt:"Rp 137.045";--gtc:"Rp 136.400"}
+    form:has(#v2:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 136.645";--gtc:"Rp 136.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 126.654";--gtc:"Rp 126.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 115.854";--gtc:"Rp 115.200"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 116.654";--gtc:"Rp 116.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 132.673";--gtc:"Rp 132.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 121.873";--gtc:"Rp 121.200"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 122.673";--gtc:"Rp 122.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 158.692";--gtc:"Rp 158.000"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.800";--gt:"Rp 147.892";--gtc:"Rp 147.200"}
+    form:has(#v2:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 148.692";--gtc:"Rp 148.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 138.701";--gtc:"Rp 138.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.000";--gt:"Rp 126.701";--gtc:"Rp 126.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 128.701";--gtc:"Rp 128.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 144.720";--gtc:"Rp 144.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.000";--gt:"Rp 132.720";--gtc:"Rp 132.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 134.720";--gtc:"Rp 134.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 170.739";--gtc:"Rp 170.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 12.000";--gt:"Rp 158.739";--gtc:"Rp 158.000"}
+    form:has(#v2:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 160.739";--gtc:"Rp 160.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 19.409";--gtc:"Rp 19.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.000";--gt:"Rp 18.409";--gtc:"Rp 18.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 10.409";--gtc:"Rp 10.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 22.428";--gtc:"Rp 22.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.000";--gt:"Rp 21.428";--gtc:"Rp 21.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 12.428";--gtc:"Rp 12.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 35.447";--gtc:"Rp 35.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 1.000";--gt:"Rp 34.447";--gtc:"Rp 34.000"}
+    form:has(#v3:checked):has(#jml [value="1"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 25.447";--gtc:"Rp 25.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 29.456";--gtc:"Rp 29.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.000";--gt:"Rp 27.456";--gtc:"Rp 27.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 20.456";--gtc:"Rp 20.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 32.475";--gtc:"Rp 32.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.000";--gt:"Rp 30.475";--gtc:"Rp 30.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 22.475";--gtc:"Rp 22.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 45.494";--gtc:"Rp 45.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 2.000";--gt:"Rp 43.494";--gtc:"Rp 43.000"}
+    form:has(#v3:checked):has(#jml [value="2"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 35.494";--gtc:"Rp 35.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 39.503";--gtc:"Rp 39.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.000";--gt:"Rp 36.503";--gtc:"Rp 36.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 30.503";--gtc:"Rp 30.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 42.522";--gtc:"Rp 42.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.000";--gt:"Rp 39.522";--gtc:"Rp 39.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 32.522";--gtc:"Rp 32.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 55.541";--gtc:"Rp 55.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 3.000";--gt:"Rp 52.541";--gtc:"Rp 52.000"}
+    form:has(#v3:checked):has(#jml [value="3"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 45.541";--gtc:"Rp 45.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 49.550";--gtc:"Rp 49.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.000";--gt:"Rp 45.550";--gtc:"Rp 45.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 40.550";--gtc:"Rp 40.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 52.569";--gtc:"Rp 52.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.000";--gt:"Rp 48.569";--gtc:"Rp 48.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 42.569";--gtc:"Rp 42.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 65.588";--gtc:"Rp 65.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 4.000";--gt:"Rp 61.588";--gtc:"Rp 61.000"}
+    form:has(#v3:checked):has(#jml [value="4"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 55.588";--gtc:"Rp 55.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 59.597";--gtc:"Rp 59.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.000";--gt:"Rp 54.597";--gtc:"Rp 54.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 9.000";--gt:"Rp 50.597";--gtc:"Rp 50.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 62.616";--gtc:"Rp 62.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.000";--gt:"Rp 57.616";--gtc:"Rp 57.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 52.616";--gtc:"Rp 52.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 75.635";--gtc:"Rp 75.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 5.000";--gt:"Rp 70.635";--gtc:"Rp 70.000"}
+    form:has(#v3:checked):has(#jml [value="5"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 65.635";--gtc:"Rp 65.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 78.644";--gtc:"Rp 78.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 72.644";--gtc:"Rp 72.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 68.644";--gtc:"Rp 68.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 84.663";--gtc:"Rp 84.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 78.663";--gtc:"Rp 78.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 74.663";--gtc:"Rp 74.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 110.682";--gtc:"Rp 110.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 6.000";--gt:"Rp 104.682";--gtc:"Rp 104.000"}
+    form:has(#v3:checked):has(#jml [value="6"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 100.682";--gtc:"Rp 100.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 88.691";--gtc:"Rp 88.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.000";--gt:"Rp 81.691";--gtc:"Rp 81.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 78.691";--gtc:"Rp 78.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 94.710";--gtc:"Rp 94.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.000";--gt:"Rp 87.710";--gtc:"Rp 87.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 84.710";--gtc:"Rp 84.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 120.729";--gtc:"Rp 120.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 7.000";--gt:"Rp 113.729";--gtc:"Rp 113.000"}
+    form:has(#v3:checked):has(#jml [value="7"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 110.729";--gtc:"Rp 110.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 98.738";--gtc:"Rp 98.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.000";--gt:"Rp 90.738";--gtc:"Rp 90.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 88.738";--gtc:"Rp 88.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 104.757";--gtc:"Rp 104.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.000";--gt:"Rp 96.757";--gtc:"Rp 96.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 94.757";--gtc:"Rp 94.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 130.776";--gtc:"Rp 130.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 8.000";--gt:"Rp 122.776";--gtc:"Rp 122.000"}
+    form:has(#v3:checked):has(#jml [value="8"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 120.776";--gtc:"Rp 120.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 108.785";--gtc:"Rp 108.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 99.785";--gtc:"Rp 99.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 98.785";--gtc:"Rp 98.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 114.804";--gtc:"Rp 114.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 105.804";--gtc:"Rp 105.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 104.804";--gtc:"Rp 104.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 140.823";--gtc:"Rp 140.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 9.000";--gt:"Rp 131.823";--gtc:"Rp 131.000"}
+    form:has(#v3:checked):has(#jml [value="9"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 130.823";--gtc:"Rp 130.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 118.832";--gtc:"Rp 118.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.000";--gt:"Rp 108.832";--gtc:"Rp 108.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="1"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 108.832";--gtc:"Rp 108.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 124.851";--gtc:"Rp 124.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.000";--gt:"Rp 114.851";--gtc:"Rp 114.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="2"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 114.851";--gtc:"Rp 114.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="1"]:checked){--disc:"Rp 0";--gt:"Rp 150.870";--gtc:"Rp 150.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="2"]:checked){--disc:"− Rp 10.000";--gt:"Rp 140.870";--gtc:"Rp 140.000"}
+    form:has(#v3:checked):has(#jml [value="10"]:checked):has(#lok [value="3"]:checked):has(#vc [value="3"]:checked){--disc:"− Rp 10.000";--gt:"Rp 140.870";--gtc:"Rp 140.000"}
+    form:has(#b1:checked):has(#bk1:checked){--rek:"Transfer ke BCA 1234567890 a.n. Nama Toko Anda"}
+    form:has(#b1:checked):has(#bk2:checked){--rek:"Transfer ke Mandiri 1230004567890 a.n. Nama Toko Anda"}
+    form:has(#b1:checked):has(#bk3:checked){--rek:"Transfer ke BNI 0123456789 a.n. Nama Toko Anda"}
+    form:has(#b1:checked):has(#bk4:checked){--rek:"Transfer ke BRI 012301004567303 a.n. Nama Toko Anda"}
+    form:has(#b1:checked):has(#bk5:checked){--rek:"Transfer ke BSI 7123456789 a.n. Nama Toko Anda"}
+    form:has(#b1:checked):has(#bk6:checked){--rek:"Transfer ke CIMB Niaga 800123456789 a.n. Nama Toko Anda"}
+    form:has(#b2:checked){--rek:"Kirim ke Gopay 0812-3456-7890 a.n. Nama Toko Anda"}
+    form:has(#b3:checked){--rek:"Kirim ke OVO 0812-3456-7890 a.n. Nama Toko Anda"}
+    form:has(#b4:checked){--rek:"Kirim ke ShopeePay 0812-3456-7890 a.n. Nama Toko Anda"}
+    form:has(#b5:checked){--rek:"Kirim ke Dana 0812-3456-7890 a.n. Nama Toko Anda"}
+    form:has(#b6:checked){--rek:"Scan kode QRIS yang dikirim admin lewat WhatsApp"}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <form action="#sukses" method="get">
+      <div class="main">
+        <div class="head">
+          <div class="badge"><i class="fa fa-shopping-bag"></i></div>
+          <h1>Formulir Pemesanan Produk</h1>
+          <p>Lengkapi data pesananmu. Total harga dan ongkos kirim terhitung otomatis di ringkasan.</p>
+        </div>
+
+        <div class="sec">
+          <h2><b>1</b>Data pemesan</h2>
+          <div class="field">
+            <label for="nama" class="req">Nama lengkap</label>
+            <div class="input"><i class="fa fa-address-card"></i>
+              <input id="nama" name="nama" type="text" placeholder="Nama sesuai identitas" required minlength="3" autocomplete="name">
+            </div>
+            <p class="error">Nama minimal 3 huruf.</p>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="wa" class="req">Nomor WhatsApp/HP</label>
+              <div class="input"><i class="fa fa-phone-square"></i>
+                <input id="wa" name="wa" type="tel" placeholder="08xxxxxxxxxx" required pattern="08[0-9]{8,12}" autocomplete="tel">
+              </div>
+              <p class="error">Format nomor: 08xxxxxxxxxx.</p>
+            </div>
+            <div class="field">
+              <label for="email" class="req">Gmail</label>
+              <div class="input"><i class="fa fa-envelope"></i>
+                <input id="email" name="email" type="email" placeholder="nama@gmail.com" required pattern="[a-zA-Z0-9._%+\-]+@gmail\.com" autocomplete="email">
+              </div>
+              <p class="error">Gunakan alamat Gmail yang valid.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>2</b>Produk</h2>
+          <div class="field">
+            <label for="produk" class="req">Nama produk</label>
+            <div class="input"><i class="fa fa-edit"></i>
+              <input id="produk" name="produk" type="text" placeholder="Contoh: Paket kebersihan bulanan" required>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label req">Varian</span>
+            <div class="vgrid">
+              <div><input type="radio" name="varian" id="v1" value="Rinso" checked><label for="v1"><strong>Rinso</strong><span>Rp 18.000</span><small>900 g per pcs</small></label></div>
+              <div><input type="radio" name="varian" id="v2" value="Close Up"><label for="v2"><strong>Close Up</strong><span>Rp 12.000</span><small>160 g per pcs</small></label></div>
+              <div><input type="radio" name="varian" id="v3" value="Pepsodent"><label for="v3"><strong>Pepsodent</strong><span>Rp 10.000</span><small>190 g per pcs</small></label></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="jml">Jumlah <small>(maksimal 10 per pesanan)</small></label>
+            <select id="jml" name="jumlah">
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>3</b>Pengiriman</h2>
+          <div class="field">
+            <label for="alamat" class="req">Alamat lengkap</label>
+            <div class="input"><i class="fa fa-location-arrow"></i>
+              <input id="alamat" name="alamat" type="text" placeholder="Jalan, nomor, RT/RW, kelurahan, kecamatan, kode pos" required minlength="10">
+            </div>
+            <p class="error">Tulis alamat selengkapnya (minimal 10 karakter).</p>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="lok">Wilayah tujuan <small>(menentukan tarif per kg)</small></label>
+              <select id="lok" name="wilayah">
+                <option value="1">Jawa Timur</option>
+                <option value="2">Pulau Jawa lainnya</option>
+                <option value="3">Luar Pulau Jawa</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="kurir">Kurir/ekspedisi</label>
+              <select id="kurir" name="kurir">
+                <option value="1">JNE</option><option value="2">J&amp;T</option><option value="3">SiCepat</option><option value="4">Paxel</option>
+                <option value="5">GoSend / Grab / ShopeeExpress Instant</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <span class="label">Jenis layanan</span>
+            <div class="options">
+              <div class="option"><input type="radio" name="layanan" id="ly1" value="Reguler" checked><label for="ly1">Reguler</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly2" value="Same Day"><label for="ly2">Same Day</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly3" value="Instant"><label for="ly3">Instant</label></div>
+              <div class="option"><input type="radio" name="layanan" id="ly4" value="Cargo"><label for="ly4">Cargo</label></div>
+            </div>
+            <p class="hint eta-hint"><i class="fa fa-truck"></i><span class="est"></span></p>
+          </div>
+          <div class="field">
+            <label class="switch">
+              <span class="sw-text"><i class="fa fa-gift"></i><span>Kirim ke penerima lain (hadiah/dropship)<small>Isi nama dan nomor penerima jika berbeda dengan pemesan</small></span></span>
+              <input type="checkbox" id="hadiah" name="hadiah" value="ya">
+              <span class="track"></span>
+            </label>
+          </div>
+          <div class="grid penerima">
+            <div class="field">
+              <label for="p_nama">Nama penerima</label>
+              <div class="input"><i class="fa fa-user"></i>
+                <input id="p_nama" name="p_nama" type="text" placeholder="Nama penerima paket">
+              </div>
+            </div>
+            <div class="field">
+              <label for="p_hp">Nomor HP penerima</label>
+              <div class="input"><i class="fa fa-phone"></i>
+                <input id="p_hp" name="p_hp" type="tel" placeholder="08xxxxxxxxxx" pattern="08[0-9]{8,12}">
+              </div>
+              <p class="error">Format nomor: 08xxxxxxxxxx.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <h2><b>4</b>Pembayaran</h2>
+          <div class="field">
+            <span class="label req">Metode pembayaran</span>
+            <div class="options">
+              <div class="option"><input type="radio" name="bayar" id="b1" value="Transfer Bank" required><label for="b1">Transfer Bank (BCA, Mandiri, dll.)</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b2" value="Gopay"><label for="b2">Gopay</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b3" value="OVO"><label for="b3">OVO</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b4" value="ShopeePay"><label for="b4">ShopeePay</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b5" value="Dana"><label for="b5">Dana</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b6" value="QRIS"><label for="b6">QRIS</label></div>
+              <div class="option"><input type="radio" name="bayar" id="b7" value="COD"><label for="b7">COD</label></div>
+            </div>
+          </div>
+          <div class="field bank">
+            <span class="label">Pilih bank tujuan transfer</span>
+            <div class="vgrid">
+              <div><input type="radio" name="bank" id="bk1" value="BCA" checked><label for="bk1"><strong>BCA</strong><small>Bank Central Asia</small></label></div>
+              <div><input type="radio" name="bank" id="bk2" value="Mandiri"><label for="bk2"><strong>Mandiri</strong><small>Bank Mandiri</small></label></div>
+              <div><input type="radio" name="bank" id="bk3" value="BNI"><label for="bk3"><strong>BNI</strong><small>Bank Negara Indonesia</small></label></div>
+              <div><input type="radio" name="bank" id="bk4" value="BRI"><label for="bk4"><strong>BRI</strong><small>Bank Rakyat Indonesia</small></label></div>
+              <div><input type="radio" name="bank" id="bk5" value="BSI"><label for="bk5"><strong>BSI</strong><small>Bank Syariah Indonesia</small></label></div>
+              <div><input type="radio" name="bank" id="bk6" value="CIMB Niaga"><label for="bk6"><strong>CIMB Niaga</strong><small>Bank CIMB Niaga</small></label></div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="vc">Voucher</label>
+            <select id="vc" name="voucher">
+              <option value="1">Tanpa voucher</option>
+              <option value="2">HEMAT10 – diskon 10% harga produk</option>
+              <option value="3">ONGKIR10 – potongan ongkos kirim Rp 10.000</option>
+            </select>
+          </div>
+          <div class="field upload">
+            <label for="struk">Upload struk/screenshot pembayaran</label>
+            <input id="struk" name="struk" type="file" accept="image/*,.pdf">
+            <p class="hint">Unggah bukti setelah membayar sesuai Grand Total. Tidak perlu untuk COD.</p>
+          </div>
+          <div class="field">
+            <label for="note">Note <small>(opsional)</small></label>
+            <textarea id="note" name="note" rows="5" placeholder="Pesan untuk penjual atau kurir"></textarea>
+          </div>
+        </div>
+        <label class="agree">
+          <input type="checkbox" id="setuju" name="setuju" required>
+          <span>Saya memastikan data pesanan sudah benar dan setuju dengan ketentuan pemesanan.</span>
+        </label>
+      </div>
+
+      <aside class="sum" aria-label="Ringkasan pesanan">
+        <div class="sum-body">
+        <h2>Ringkasan pesanan</h2>
+        <p class="item"></p>
+        <div class="stok">
+          <div class="top"><span>Sisa stok</span><b>100 produk</b></div>
+          <div class="bar"><i></i></div>
+          <small class="after"></small>
+        </div>
+        <div class="eta">
+          <i class="fa fa-truck"></i>
+          <div><span>Estimasi tiba</span><b class="est"></b><small>Dihitung sejak paket diserahkan ke kurir, tanpa hari libur.</small></div>
+        </div>
+        <dl class="rows">
+          <div><dt>Total harga produk</dt><dd class="tot"></dd></div>
+          <div><dt>Ongkos kirim<small class="ber"></small></dt><dd class="ong"></dd></div>
+          <div><dt>Potongan voucher</dt><dd class="disc"></dd></div>
+          <div><dt>Kode unik</dt><dd class="ku"></dd></div>
+        </dl>
+        <div class="pay"><span>Cara bayar</span><b class="rekv"></b></div>
+        <p class="note">
+          <span class="nn">Transfer tepat sesuai Grand total, termasuk kode unik, supaya pembayaran mudah dicek.</span>
+          <span class="nc">Bayar tunai ke kurir saat barang tiba. COD tidak memakai kode unik.</span>
+        </p>
+        </div>
+        <div class="gt"><span>Grand total</span><strong class="gtv"></strong></div>
+        <div class="actions">
+          <button type="reset" class="btn btn-reset"><i class="fa fa-refresh"></i>Ulangi</button>
+          <button type="submit" class="btn btn-send"><i class="fa fa-paper-plane"></i>Kirim pesanan</button>
+        </div>
+      </aside>
+    </form>
+  </div>
+
+  <!-- Ganti 6281234567890 dengan nomor WhatsApp admin (awali 62, tanpa 0 dan tanpa +) -->
+  <a class="wa-float" href="https://wa.me/6281234567890?text=Halo%20admin%2C%20saya%20ingin%20bertanya%20soal%20pesanan%20saya." target="_blank" rel="noopener" aria-label="Hubungi admin lewat WhatsApp">
+    <i class="fa fa-whatsapp"></i><span>Hubungi admin</span>
+  </a>
+
+  <div class="modal" id="sukses" role="dialog" aria-labelledby="judul-sukses">
+    <div class="box">
+      <div class="ok"><i class="fa fa-check"></i></div>
+      <h2 id="judul-sukses">Pesanan terkirim</h2>
+      <p>Terima kasih. Selesaikan pembayaran sesuai Grand total, lalu unggah bukti pembayaran jika belum.</p>
+      <a href="#">Tutup</a>
+    </div>
+  </div>
+</body>
+</html>
