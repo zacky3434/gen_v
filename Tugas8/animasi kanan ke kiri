@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animasi Web Design</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Posisi di bagian atas layar */
+      min-height: 100vh;
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      padding-top: 40px;
+    }
+
+    /* Pembungkus Utama */
+    .container {
+      position: relative;
+      width: 900%;
+      max-width: 900px;
+      padding-top: 130px;
+    }
+
+    /* Bola dengan Animasi Gerak & Perubahan Warna */
+    .ball {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      animation: moveBall 3s ease-in-out infinite alternate, changeColor 6s linear infinite;
+    }
+
+    /* Spanduk Teks Hijau Mint */
+    .banner {
+      width: 100%;
+      height: 65px;
+      background-color: #7bf8c7;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Teks Bergerak dari Kanan ke Kiri & Perubahan Warna Sama Seperti Bola */
+    .banner h1 {
+      font-size: 28px;
+      font-weight: bold;
+      white-space: nowrap;
+      position: absolute;
+      /* Kombinasi Animasi Bergerak ke Kiri dan Perubahan Warna */
+      animation: textToLeft 7s linear infinite, changeTextColor 6s linear infinite;
+    }
+
+    /* Keyframes Pergerakan Bola */
+    @keyframes moveBall {
+      0% {
+        left: 0;
+      }
+      100% {
+        left: calc(100% - 120px);
+      }
+    }
+
+    /* Keyframes Perubahan Warna Bola (Purple -> Merah -> Biru) */
+    @keyframes changeColor {
+      0%, 100% {
+        background-color: #800080; /* Purple */
+      }
+      33% {
+        background-color: #ff0000; /* Merah */
+      }
+      66% {
+        background-color: #0000ff; /* Biru */
+      }
+    }
+
+    /* Keyframes Perubahan Warna Teks (Mengikuti Perubahan Warna Bola) */
+    @keyframes changeTextColor {
+      0%, 100% {
+        color: #800080; /* Purple */
+      }
+      33% {
+        color: #ff0000; /* Merah */
+      }
+      66% {
+        color: #0000ff; /* Biru */
+      }
+    }
+
+    /* Keyframes Teks Bergerak dari Kanan ke Kiri */
+    @keyframes textToLeft {
+      0% {
+        transform: translateX(900px); /* Mulai dari luar batas sebelah kanan */
+      }
+      100% {
+        transform: translateX(-100%); /* Keluar ke sebelah kiri */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="ball"></div>
+    <div class="banner">
+      <h1>Assalamu'alaikum Selamat Belajar Web Design.</h1>
+    </div>
+  </div>
+
+</body>
+</html>
