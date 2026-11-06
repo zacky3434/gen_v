@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark" data-accent="violet">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="ZACKY">
+<title>CV — Zacky Aji Purnomo, Senior Software Engineer</title>
+
+<!-- CSS EKSTERNAL: stylesheet font dari Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- CSS INTERNAL: seluruh gaya halaman -->
+<style>
+:root{--a:#7c5cff;--a2:#22d3ee;--bg:#090d18;--ink:#eef1f8;--mut:#98a2b8;--card:rgba(255,255,255,.055);--line:rgba(255,255,255,.11);
+--head:"Bricolage Grotesque",system-ui,sans-serif;--body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=light]{--bg:#f3f5fb;--ink:#111626;--mut:#566079;--card:rgba(255,255,255,.72);--line:rgba(17,22,38,.1)}
+:root[data-accent=teal]{--a:#10b981;--a2:#38bdf8}
+:root[data-accent=sunset]{--a:#f59e0b;--a2:#f43f5e}
+:root[data-accent=rose]{--a:#ec4899;--a2:#8b5cf6}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--body);transition:background .3s,color .3s}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--a2);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+section{padding:84px 0 12px;scroll-margin-top:40px}
+h2{font:700 clamp(28px,4vw,40px)/1.1 var(--head);letter-spacing:-.02em;margin:0 0 8px}
+.sub{color:var(--mut);margin:0 0 36px;max-width:56ch}
+.glass{background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+
+/* Latar aurora (satu-satunya gerak otomatis di halaman) */
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.aurora::before,.aurora::after{content:"";position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.38;animation:drift 26s ease-in-out infinite alternate}
+.aurora::before{background:var(--a);top:-25vmax;left:-15vmax}
+.aurora::after{background:var(--a2);bottom:-30vmax;right:-20vmax;animation-delay:-9s}
+:root[data-theme=light] .aurora::before,:root[data-theme=light] .aurora::after{opacity:.2}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:30;background:linear-gradient(90deg,var(--a),var(--a2));transform-origin:0 50%;transform:scaleX(0)}
+
+/* Navigasi melayang */
+.nav{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:4px;padding:6px;border-radius:999px;max-width:calc(100% - 20px)}
+.nav a,.nav button{border:0;background:none;text-decoration:none;font-size:14px;font-weight:500;padding:8px 14px;border-radius:999px;color:var(--mut);transition:color .2s,background .2s}
+.nav a:hover,.nav button:hover{color:var(--ink)}
+.nav a.on{color:#fff;background:linear-gradient(135deg,var(--a),var(--a2))}
+.nav .sep{width:1px;height:20px;background:var(--line);margin:0 4px}
+.dot{width:18px;height:18px;padding:0!important;border-radius:50%!important;border:2px solid transparent!important}
+.dot[aria-pressed=true]{border-color:var(--ink)!important}
+.icon{display:grid;place-items:center;padding:8px!important}
+
+/* Hero */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.3fr .7fr;gap:40px;align-items:center;padding-top:110px}
+.status{display:inline-flex;align-items:center;gap:10px;padding:7px 14px;border-radius:99px;font-size:14px;color:var(--mut)}
+.status i{width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 #22c55e;animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.hero h1{font:800 clamp(52px,9vw,104px)/.95 var(--head);letter-spacing:-.04em;margin:22px 0 18px}
+.typing{font:600 clamp(20px,3vw,28px) var(--head);min-height:1.5em;background:linear-gradient(90deg,var(--a),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.typing::after{content:"";display:inline-block;width:3px;height:1em;margin-left:4px;vertical-align:-.12em;background:var(--a2);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.lead{color:var(--mut);font-size:18px;max-width:50ch;margin:18px 0 30px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:14px;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--card);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.main{border:0;color:#fff;background:linear-gradient(135deg,var(--a),var(--a2));box-shadow:0 10px 30px -8px var(--a)}
+.photo{position:relative;width:min(300px,70vw);aspect-ratio:1;margin:auto}
+.photo::before{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(from 0deg,var(--a),var(--a2),var(--a));animation:spin 12s linear infinite;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px))}
+@keyframes spin{to{transform:rotate(1turn)}}
+.photo div{position:absolute;inset:14px;border-radius:50%;display:grid;place-items:center;font:800 84px var(--head);letter-spacing:-.04em;background:radial-gradient(circle at 30% 25%,var(--a2),var(--a));color:#fff;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px;grid-column:1/-1}
+.stats div{padding:22px 26px}
+.stats strong{display:block;font:800 44px/1 var(--head)}
+.stats strong::after{content:"+";color:var(--a2)}
+.stats span{color:var(--mut);font-size:14px}
+
+/* Pengalaman */
+.exp{display:grid;gap:14px}
+details{padding:0;overflow:hidden;transition:border-color .2s}
+details[open]{border-color:var(--a)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:22px 26px}
+summary::-webkit-details-marker{display:none}
+summary h3{margin:0;font:700 19px var(--head)}
+summary small{color:var(--mut);font-size:14px}
+summary::after{content:"";width:10px;height:10px;flex:none;border-right:2px solid var(--mut);border-bottom:2px solid var(--mut);transform:rotate(45deg);transition:transform .25s}
+details[open] summary::after{transform:rotate(225deg)}
+.body{padding:0 26px 24px;color:var(--mut)}
+.body ul{margin:0 0 14px;padding-left:20px}
+.body li{margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags span{font-size:13px;padding:4px 12px;border-radius:99px;border:1px solid var(--line);color:var(--ink)}
+
+/* Keahlian */
+.rings{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.ring{padding:20px 8px;text-align:center}
+.ring svg{width:84px;height:84px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:url(#grad);stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1)}
+.ring.in .fg{stroke-dashoffset:calc(100 - var(--p))}
+.ring b{display:block;margin-top:-84px;height:84px;font:700 18px/84px var(--head)}
+.ring p{margin:14px 0 0;font-size:14px;color:var(--mut)}
+
+/* Proyek */
+.filters{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.filters button{padding:8px 18px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px;font-weight:500}
+.filters button[aria-pressed=true]{background:linear-gradient(135deg,var(--a),var(--a2));border-color:transparent;color:#fff}
+.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.proj{overflow:hidden;transform:perspective(800px) rotateX(var(--rx,0)) rotateY(var(--ry,0));transition:transform .15s,border-color .2s}
+.proj[hidden]{display:none}
+.proj:hover{border-color:var(--a)}
+.thumb{height:130px;background:linear-gradient(135deg,var(--a),var(--a2));position:relative}
+.thumb::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.14) 0 2px,transparent 2px 14px)}
+.proj:nth-child(2) .thumb{filter:hue-rotate(60deg)}
+.proj:nth-child(3) .thumb{filter:hue-rotate(-50deg)}
+.proj .in{padding:20px 22px 24px}
+.proj h3{margin:0 0 6px;font:700 18px var(--head)}
+.proj p{margin:0 0 14px;font-size:14.5px;color:var(--mut)}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.two .glass{padding:26px 28px}
+.two h3{margin:0 0 16px;font:700 20px var(--head)}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.list small{display:block;color:var(--mut)}
+
+.cta{padding:48px 32px;text-align:center;background:linear-gradient(135deg,color-mix(in srgb,var(--a) 22%,transparent),color-mix(in srgb,var(--a2) 18%,transparent)),var(--card)}
+.cta h2{margin-bottom:12px}
+.cta .btns{justify-content:center;margin-top:26px}
+footer{text-align:center;color:var(--mut);font-size:14px;padding:56px 0 40px}
+.toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);padding:12px 20px;border-radius:12px;background:var(--ink);color:var(--bg);font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:40}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Hak cipta + menu geser otomatis ===== */
+footer p{margin:0}
+footer .cr{color:var(--ink);font-weight:600;font-size:15px;letter-spacing:.01em}
+.nav a{position:relative}
+.nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:4px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--a),var(--a2));transform:scaleX(0);transform-origin:left}
+.nav a:hover::after{transform:scaleX(1);transition:transform .22s linear}
+.nav a.on::after{display:none}
+/* ===== Kursor kustom + jejak warna ===== */
+.has-cur,.has-cur *{cursor:none!important}
+.has-cur input,.has-cur textarea{cursor:text!important}
+.cur{position:fixed;left:0;top:0;pointer-events:none;z-index:60;will-change:transform;opacity:0;transition:opacity .3s}
+.cur-on .cur{opacity:1}
+.cur::before{content:"";position:absolute;border-radius:50%}
+.cur-t::before{width:var(--s);height:var(--s);left:calc(var(--s)/-2);top:calc(var(--s)/-2);background:var(--c)}
+.cur-ring::before{width:38px;height:38px;left:-19px;top:-19px;border:2px solid var(--a2);transition:transform .25s,background .25s}
+.cur-hot .cur-ring::before{transform:scale(1.7);background:color-mix(in srgb,var(--a) 20%,transparent)}
+.cur-down .cur-ring::before{transform:scale(.7)}
+.cur-dot{mix-blend-mode:difference}
+.cur-dot::before{width:8px;height:8px;left:-4px;top:-4px;background:#fff}
+@media print{.cur{display:none!important}}
+/* ===== Tambahan v3 ===== */
+:root{color-scheme:dark}:root[data-theme=light]{color-scheme:light}
+.glass:not(.nav){position:relative}
+.glass:not(.nav)::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--a) 24%,transparent),transparent 62%)}
+.glass:not(.nav):hover::before{opacity:1}
+.marq{overflow:hidden;margin-top:24px;-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marq div{display:flex;gap:14px;width:max-content;animation:marq 34s linear infinite}
+.marq:hover div{animation-play-state:paused}
+.marq span{padding:9px 20px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-weight:500;white-space:nowrap}
+@keyframes marq{to{transform:translateX(calc(-50% - 7px))}}
+.svc{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.svc .glass{padding:28px}
+.svc .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;margin-bottom:18px;color:#fff;background:linear-gradient(135deg,var(--a),var(--a2))}
+.svc h3{margin:0 0 8px;font:700 19px var(--head)}
+.svc p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.svc small{font-weight:600}
+.tw{overflow:hidden}
+.track{display:flex;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.t{flex:0 0 100%;padding:40px 44px}
+.t q{display:block;quotes:none;font:500 clamp(19px,2.6vw,27px)/1.45 var(--head);letter-spacing:-.01em}
+.who{display:flex;align-items:center;gap:14px;margin-top:26px}
+.who i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:700 16px var(--head);font-style:normal;color:#fff;background:linear-gradient(135deg,var(--a),var(--a2))}
+.who small{display:block;color:var(--mut)}
+.tctl{display:flex;align-items:center;justify-content:space-between;margin-top:16px}
+.tctl .dots{display:flex;gap:8px}
+.tctl .dots button{width:9px;height:9px;padding:0;border-radius:99px;border:0;background:var(--line);transition:width .3s,background .3s}
+.tctl .dots button[aria-current=true]{width:28px;background:linear-gradient(90deg,var(--a),var(--a2))}
+.tctl .arrows button{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--card);margin-left:8px;font-size:18px}
+.msg{padding:34px;margin-bottom:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.msg h2,.msg .sub,.msg .full{grid-column:1/-1}
+.msg h2{margin:0}.msg .sub{margin:0 0 6px}
+.msg label{display:grid;gap:6px;font-size:14px;font-weight:500}
+.msg input,.msg select,.msg textarea{font:inherit;color:var(--ink);width:100%;padding:13px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card)}
+.msg textarea{min-height:120px;resize:vertical}
+.msg input:focus,.msg select:focus,.msg textarea:focus{outline:0;border-color:var(--a);box-shadow:0 0 0 3px color-mix(in srgb,var(--a) 28%,transparent)}
+.msg .btn{justify-self:start}
+.top{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:20;display:grid;place-items:center;opacity:0;pointer-events:none;transform:translateY(10px);transition:.25s}
+.top.show{opacity:1;pointer-events:auto;transform:none}
+@media (max-width:860px){.svc{grid-template-columns:1fr}.t{padding:30px 24px}}
+@media (max-width:560px){.msg{grid-template-columns:1fr;padding:24px}}
+@media print{.marq,.tctl,.msg,.top{display:none!important}.track{transform:none!important}.t:nth-child(n+2){display:none}}
+@media (max-width:860px){
+ .nav a{display:none}.hero{grid-template-columns:1fr;text-align:left;padding-top:96px}.photo{order:-1;width:200px;margin:0}
+ .photo div{font-size:60px}.rings{grid-template-columns:repeat(3,1fr)}.projects{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){.stats,.two,.projects{grid-template-columns:1fr}.rings{grid-template-columns:repeat(2,1fr)}summary{padding:18px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{
+ @page{size:A4;margin:12mm}
+ :root,:root[data-theme]{--bg:#fff;--ink:#111626;--mut:#4a5468;--card:#fff;--line:#d9dde7}
+ .aurora,.progress,.nav,.toast,.filters,.btns,.status{display:none!important}
+ .hero{min-height:0;padding-top:0}.photo{width:130px}section{padding-top:28px;break-inside:avoid}
+ .typing{color:var(--a);-webkit-text-fill-color:currentColor}.typing::after{display:none}
+ .ring .fg{stroke-dashoffset:calc(100 - var(--p))!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+
+<body>
+<div class="aurora" aria-hidden="true"></div>
+<div class="progress" id="progress"></div>
+
+<nav class="nav glass" aria-label="Navigasi">
+  <a href="#tentang" class="on">Tentang</a><a href="#pengalaman">Pengalaman</a><a href="#keahlian">Keahlian</a><a href="#proyek">Proyek</a><a href="#kontak">Kontak</a>
+  <span class="sep"></span>
+  <!-- CSS INLINE: warna tiap tombol aksen ditulis langsung di elemen -->
+  <button class="dot" data-set="violet" aria-label="Aksen ungu" aria-pressed="true" style="background:linear-gradient(135deg,#7c5cff,#22d3ee)"></button>
+  <button class="dot" data-set="teal" aria-label="Aksen hijau" aria-pressed="false" style="background:linear-gradient(135deg,#10b981,#38bdf8)"></button>
+  <button class="dot" data-set="sunset" aria-label="Aksen jingga" aria-pressed="false" style="background:linear-gradient(135deg,#f59e0b,#f43f5e)"></button>
+  <button class="dot" data-set="rose" aria-label="Aksen merah muda" aria-pressed="false" style="background:linear-gradient(135deg,#ec4899,#8b5cf6)"></button>
+  <span class="sep"></span>
+  <button class="icon" id="themeBtn" aria-label="Ganti tema terang/gelap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+  <button class="icon" id="pdfBtn" aria-label="Unduh PDF"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg></button>
+</nav>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--a)"/><stop offset="1" stop-color="var(--a2)"/></linearGradient></defs></svg>
+
+<main class="wrap">
+  <header class="hero" id="tentang">
+    <div>
+      <span class="status glass"><i></i>Terbuka untuk peran senior &amp; konsultasi</span>
+      <h1>Zacky Aji<br>Purnomo</h1>
+      <div class="typing" id="typing" aria-label="Senior Software Engineer"></div>
+      <p class="lead">Software engineer dengan pengalaman 10 tahun merancang sistem backend yang andal, skalabel, dan mudah dirawat. Terbiasa memimpin tim, memecahkan masalah arsitektur yang rumit, dan menjaga produk tetap berjalan di skala jutaan transaksi.</p>
+      <div class="btns">
+        <a class="btn main" href="https://wa.me/6289524633842">Hubungi via WhatsApp</a>
+        <button class="btn" id="pdfBtn2">Unduh CV (PDF)</button>
+      </div>
+    </div>
+    <div class="photo"><div>ZP<!-- Ganti dengan: <img src="foto.jpg" alt="Foto Zacky"> --></div></div>
+    <div class="stats">
+      <div class="glass"><strong data-count="10">0</strong><span>Tahun pengalaman</span></div>
+      <div class="glass"><strong data-count="60">0</strong><span>Proyek produksi</span></div>
+      <div class="glass"><strong data-count="8">0</strong><span>Sertifikasi profesional</span></div>
+    </div>
+  </header>
+
+  <div class="marq" aria-label="Teknologi yang dikuasai"><div><span>TypeScript</span><span>Go</span><span>Node.js</span><span>Python</span><span>PostgreSQL</span><span>Redis</span><span>Kafka</span><span>gRPC</span><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Terraform</span><span>React</span><span>GraphQL</span><span>TypeScript</span><span>Go</span><span>Node.js</span><span>Python</span><span>PostgreSQL</span><span>Redis</span><span>Kafka</span><span>gRPC</span><span>Docker</span><span>Kubernetes</span><span>AWS</span><span>Terraform</span><span>React</span><span>GraphQL</span></div></div>
+
+  <section id="layanan">
+    <h2>Yang bisa saya kerjakan</h2>
+    <p class="sub">Dari merancang arsitektur sampai memastikan sistem tetap hidup di jam tersibuk.</p>
+    <div class="svc">
+      <div class="glass"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></div><h3>Arsitektur &amp; backend</h3><p>Merancang API dan microservices yang skalabel, aman, dan mudah dikembangkan tim.</p><small>Konsultasi mulai 1 minggu</small></div>
+      <div class="glass"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9.5 4.25 4.25 0 0 1 17.5 18z"/></svg></div><h3>Cloud &amp; DevOps</h3><p>Infrastruktur sebagai kode, CI/CD, observability, dan optimasi biaya di AWS.</p><small>Audit mulai 2 minggu</small></div>
+      <div class="glass"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 4.5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4-6"/></svg></div><h3>Technical leadership</h3><p>Code review, mentoring, dan membangun budaya engineering yang sehat.</p><small>Pendampingan bulanan</small></div>
+    </div>
+  </section>
+
+  <section id="pengalaman">
+    <h2>Pengalaman kerja</h2>
+    <p class="sub">Sepuluh tahun, tiga peran. Klik tiap posisi untuk melihat pencapaiannya.</p>
+    <div class="exp">
+      <details class="glass" open>
+        <summary><div><h3>Senior Software Engineer &amp; Tech Lead · PT Teknologi Finansial Nusantara</h3><small>2021 – sekarang</small></div></summary>
+        <div class="body"><ul><li>Merancang arsitektur microservices yang memproses 2 juta transaksi per hari dengan uptime 99,98%.</li><li>Memimpin 8 engineer di 2 tim; waktu rilis turun dari mingguan menjadi harian lewat CI/CD.</li><li>Memangkas biaya cloud 32% lewat right-sizing dan autoscaling.</li></ul><div class="tags"><span>Go</span><span>TypeScript</span><span>PostgreSQL</span><span>Kubernetes</span><span>AWS</span></div></div>
+      </details>
+      <details class="glass">
+        <summary><div><h3>Software Engineer · PT Dagang Digital Indonesia</h3><small>2018 – 2021</small></div></summary>
+        <div class="body"><ul><li>Membangun layanan pencarian dan pembayaran untuk marketplace dengan 1,5 juta pengguna aktif.</li><li>Memimpin migrasi monolit ke microservices tanpa downtime.</li><li>Membimbing 5 engineer junior hingga naik jabatan.</li></ul><div class="tags"><span>Node.js</span><span>Redis</span><span>Kafka</span><span>Docker</span></div></div>
+      </details>
+      <details class="glass">
+        <summary><div><h3>Full-Stack Developer · Studio Pixel Jatim</h3><small>2016 – 2018</small></div></summary>
+        <div class="body"><ul><li>Menyelesaikan 30+ proyek web untuk klien korporat dan UMKM.</li><li>Menyusun standar kode dan proses deploy yang dipakai seluruh studio.</li></ul><div class="tags"><span>PHP</span><span>Laravel</span><span>MySQL</span><span>React</span></div></div>
+      </details>
+    </div>
+  </section>
+
+  <section id="keahlian">
+    <h2>Keahlian</h2>
+    <p class="sub">Tingkat penguasaan berdasarkan pengalaman proyek nyata.</p>
+    <div class="rings"><div class="ring glass" style="--p:96"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>96</b><p>Backend</p></div><div class="ring glass" style="--p:93"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>93</b><p>System design</p></div><div class="ring glass" style="--p:89"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>89</b><p>Cloud &amp; DevOps</p></div><div class="ring glass" style="--p:91"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>91</b><p>Database</p></div><div class="ring glass" style="--p:85"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>85</b><p>Frontend</p></div><div class="ring glass" style="--p:90"><svg viewBox="0 0 80 80"><circle class="bg" cx="40" cy="40" r="32" pathLength="100"/><circle class="fg" cx="40" cy="40" r="32" pathLength="100"/></svg><b>90</b><p>Leadership</p></div>
+    </div>
+  </section>
+
+  <section id="proyek">
+    <h2>Proyek pilihan</h2>
+    <p class="sub">Saring berdasarkan bidang.</p>
+    <div class="filters" role="group" aria-label="Filter proyek">
+      <button data-f="all" aria-pressed="true">Semua</button><button data-f="backend" aria-pressed="false">Backend</button><button data-f="cloud" aria-pressed="false">Cloud</button><button data-f="web" aria-pressed="false">Web</button>
+    </div>
+    <div class="projects">
+      <article class="proj glass" data-t="backend"><div class="thumb"></div><div class="in"><h3>Payment Gateway Internal</h3><p>Layanan pembayaran terdistribusi dengan idempotency dan retry aman, melayani 2 juta transaksi per hari.</p><div class="tags"><span>Go</span><span>Kafka</span><span>PostgreSQL</span></div></div></article>
+      <article class="proj glass" data-t="cloud"><div class="thumb"></div><div class="in"><h3>Platform Observability</h3><p>Metrik, log, dan alert terpusat; waktu deteksi insiden turun dari 25 menit menjadi 4 menit.</p><div class="tags"><span>Prometheus</span><span>Grafana</span><span>Kubernetes</span></div></div></article>
+      <article class="proj glass" data-t="web"><div class="thumb"></div><div class="in"><h3>Dashboard Admin &amp; Design System</h3><p>Panel operasional dengan 40+ komponen yang dipakai bersama oleh 4 tim produk.</p><div class="tags"><span>React</span><span>TypeScript</span></div></div></article>
+    </div>
+  </section>
+
+  <section id="testimoni">
+    <h2>Kata mereka</h2>
+    <p class="sub">Umpan balik dari pimpinan dan rekan kerja.</p>
+    <div id="testi">
+      <div class="tw glass"><div class="track" id="track"><div class="t"><q>“Zacky mengubah arsitektur kami dari sumber insiden menjadi fondasi yang tenang. Tim jadi berani merilis setiap hari.”</q><div class="who"><i>HS</i><div><b>Hendra Saputra</b><small>CTO, PT Teknologi Finansial Nusantara</small></div></div></div><div class="t"><q>“Mentor yang sabar dan tajam. Code review-nya selalu menjelaskan alasan, bukan hanya perbaikan.”</q><div class="who"><i>LW</i><div><b>Laras Wulandari</b><small>Engineering Manager</small></div></div></div><div class="t"><q>“Dalam dua minggu audit-nya menemukan pemborosan cloud yang sudah kami abaikan bertahun-tahun.”</q><div class="who"><i>RF</i><div><b>Rizal Fahmi</b><small>Founder, startup logistik</small></div></div></div></div></div>
+      <div class="tctl"><div class="dots" id="tdots"></div><div class="arrows"><button id="tprev" aria-label="Sebelumnya">‹</button><button id="tnext" aria-label="Berikutnya">›</button></div></div>
+    </div>
+  </section>
+
+  <section id="pendidikan">
+    <h2>Pendidikan &amp; sertifikasi</h2>
+    <div class="two">
+      <div class="glass"><h3>Pendidikan</h3><ul class="list"><li><b>S1 Teknik Informatika</b><small>Universitas Contoh Surabaya · 2012–2016 · IPK 3,70</small></li><li><b>Pembicara tamu</b><small>Meetup dan konferensi engineering regional · 2019–sekarang</small></li></ul></div>
+      <div class="glass"><h3>Sertifikasi</h3><ul class="list"><li><b>AWS Solutions Architect Professional</b><small>Amazon Web Services · 2024</small></li><li><b>Certified Kubernetes Administrator</b><small>CNCF · 2022</small></li><li><b>Terraform Associate</b><small>HashiCorp · 2021</small></li></ul></div>
+    </div>
+  </section>
+
+  <section id="kontak">
+    <form class="msg glass" id="msgForm">
+      <h2>Kirim pesan cepat</h2>
+      <p class="sub">Isi formulir ini, pesan Anda langsung terbuka di WhatsApp.</p>
+      <label>Nama<input name="nama" required autocomplete="name" placeholder="Nama Anda"></label>
+      <label>Yang dibutuhkan<select name="butuh"><option>Arsitektur &amp; backend</option><option>Cloud &amp; DevOps</option><option>Technical leadership</option><option>Lainnya</option></select></label>
+      <label class="full">Pesan<textarea name="pesan" required placeholder="Ceritakan singkat proyek Anda"></textarea></label>
+      <button class="btn main" type="submit">Kirim lewat WhatsApp</button>
+    </form>
+    <div class="cta glass">
+      <h2>Ayo bangun sistem yang tangguh</h2>
+      <p class="sub" style="margin:0 auto">Butuh arsitek, tech lead, atau konsultan? Kirim pesan, saya balas dalam 1 hari kerja.</p>
+      <div class="btns">
+        <a class="btn main" href="https://wa.me/6289524633842">WhatsApp</a>
+        <a class="btn" href="mailto:zackyajipurnomo9900@gmail.com">Kirim email</a>
+        <button class="btn" id="copyBtn">Salin email</button>
+      </div>
+    </div>
+  </section>
+  <footer><p class="cr">© 2026 ZACKY. Semua hak dilindungi.</p></footer>
+</main>
+<button class="top" id="top" aria-label="Kembali ke atas"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19V5m-6 6l6-6 6 6"/></svg></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $=(s,c=document)=>c.querySelector(s),$$=(s,c=document)=>[...c.querySelectorAll(s)];
+const root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EMAIL='zackyajipurnomo9900@gmail.com';
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+// Tema & warna aksen (diingat)
+const th=store.get('cv-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');root.dataset.theme=th;
+$('#themeBtn').onclick=()=>{const n=root.dataset.theme==='dark'?'light':'dark';root.dataset.theme=n;store.set('cv-theme',n)};
+function setAccent(a){root.dataset.accent=a;$$('.dot').forEach(d=>d.setAttribute('aria-pressed',d.dataset.set===a));store.set('cv-accent',a)}
+$$('.dot').forEach(d=>d.onclick=()=>setAccent(d.dataset.set));setAccent(store.get('cv-accent')||'violet');
+
+// Cetak / PDF (semua detail dibuka dulu)
+const pdf=()=>window.print();$('#pdfBtn').onclick=pdf;$('#pdfBtn2').onclick=pdf;
+let was=[];addEventListener('beforeprint',()=>{was=$$('details').map(d=>d.open);$$('details').forEach(d=>d.open=true)});
+addEventListener('afterprint',()=>$$('details').forEach((d,i)=>d.open=was[i]));
+
+// Salin email
+$('#copyBtn').onclick=async()=>{try{await navigator.clipboard.writeText(EMAIL);toast('Email disalin: '+EMAIL)}catch(e){toast('Salin manual: '+EMAIL)}};
+
+// Efek mengetik
+const roles=['Senior Software Engineer','Backend & Cloud Architect','Tech Lead 8 engineer'],ty=$('#typing');
+if(reduce){ty.textContent=roles[0]}else{let r=0,i=0,del=false;(function loop(){const w=roles[r];ty.textContent=w.slice(0,i);
+ let d=del?35:75;if(!del&&i===w.length){del=true;d=1400}else if(del&&i===0){del=false;r=(r+1)%roles.length;d=300}else i+=del?-1:1;setTimeout(loop,d)})()}
+
+// Progres gulir & menu aktif
+const bar=$('#progress');addEventListener('scroll',()=>{const h=document.documentElement;bar.style.transform='scaleX('+(h.scrollTop/(h.scrollHeight-h.clientHeight||1))+')'},{passive:true});
+const links=$$('.nav a');
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});
+$$('header[id],section[id]').forEach(x=>spy.observe(x));
+
+// Cincin keahlian & angka statistik
+function count(el){const t=+el.dataset.count;if(reduce){el.textContent=t;return}const s=performance.now();(function f(n){const p=Math.min((n-s)/1400,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');if(e.target.dataset.count)count(e.target);io.unobserve(e.target)}),{threshold:.35});
+$$('.ring,[data-count]').forEach(el=>io.observe(el));
+
+// Filter proyek
+$$('.filters button').forEach(b=>b.onclick=()=>{$$('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+ $$('.proj').forEach(p=>p.hidden=!(b.dataset.f==='all'||p.dataset.t===b.dataset.f))});
+
+// Sorotan cahaya mengikuti kursor di kartu
+if(matchMedia('(hover:hover)').matches)document.addEventListener('mousemove',e=>{const g=e.target.closest&&e.target.closest('.glass');if(!g)return;const r=g.getBoundingClientRect();g.style.setProperty('--mx',(e.clientX-r.left)+'px');g.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
+
+// Testimoni: geser otomatis, tombol, titik, dan usap di layar sentuh
+(()=>{const tr=$('#track'),n=tr.children.length,dots=$('#tdots');let i=0,timer;
+ dots.innerHTML=[...tr.children].map((_,k)=>`<button aria-label="Testimoni ${k+1}"></button>`).join(' ');
+ const bs=[...dots.children];
+ function go(k){i=(k+n)%n;tr.style.transform=`translateX(-${i*100}%)`;bs.forEach((b,j)=>b.setAttribute('aria-current',j===i))}
+ function play(){clearInterval(timer);if(!reduce)timer=setInterval(()=>go(i+1),6500)}
+ bs.forEach((b,k)=>b.onclick=()=>{go(k);play()});
+ $('#tprev').onclick=()=>{go(i-1);play()};$('#tnext').onclick=()=>{go(i+1);play()};
+ const box=$('#testi');box.addEventListener('mouseenter',()=>clearInterval(timer));box.addEventListener('mouseleave',play);
+ let x0=null;tr.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+ tr.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>50){go(i+(d<0?1:-1));play()}x0=null});
+ go(0);play()})();
+
+// Formulir: buka WhatsApp dengan pesan terisi
+$('#msgForm').addEventListener('submit',e=>{e.preventDefault();const f=e.target;
+ const text='Halo Zacky, saya '+f.nama.value.trim()+'. Saya butuh: '+f.butuh.value+'.\n\n'+f.pesan.value.trim();
+ const w=window.open('https://wa.me/6289524633842?text='+encodeURIComponent(text),'_blank','noopener');
+ if(w){toast('Membuka WhatsApp…')}else{if(navigator.clipboard)navigator.clipboard.writeText(text).catch(()=>{});toast('Pop-up diblokir. Pesan disalin, tempel di WhatsApp.')}});
+
+// Tombol kembali ke atas
+const topBtn=$('#top');addEventListener('scroll',()=>topBtn.classList.toggle('show',scrollY>700),{passive:true});topBtn.onclick=()=>scrollTo({top:0});
+
+// Menu menggulir otomatis saat kursor diarahkan, tanpa klik (jeda singkat agar tidak salah picu)
+if(matchMedia('(hover:hover) and (pointer:fine)').matches)$$('.nav a').forEach(a=>{let t;
+ a.addEventListener('mouseenter',()=>{clearTimeout(t);t=setTimeout(()=>{const sec=$(a.getAttribute('href'));
+  if(sec&&!a.classList.contains('on'))sec.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})},220)});
+ a.addEventListener('mouseleave',()=>clearTimeout(t))});
+
+// Kursor kustom: titik, cincin, dan jejak warna
+if(matchMedia('(hover:hover) and (pointer:fine)').matches&&!reduce)(()=>{
+ const mk=c=>{const d=document.createElement('div');d.className='cur '+c;d.setAttribute('aria-hidden','true');document.body.appendChild(d);return d};
+ const trail=[...Array(10)].map((_,i)=>{const t=mk('cur-t');
+  t.style.setProperty('--s',(15-i*1.2)+'px');
+  t.style.setProperty('--c','color-mix(in srgb,color-mix(in srgb,var(--a) '+(100-i*10)+'%,var(--a2)) '+(88-i*7)+'%,transparent)');return t});
+ const ring=mk('cur-ring'),dot=mk('cur-dot'),els=[...trail,ring,dot],last=els.length-2;
+ let mx=innerWidth/2,my=innerHeight/2;
+ const P=els.map(()=>({x:mx,y:my})),K=els.map((_,j)=>j<=9?.5-j*.035:j===10?.18:1);
+ (function tick(){
+  P.forEach((p,j)=>{const t=(j===0||j>=last)?{x:mx,y:my}:P[j-1];
+   p.x+=(t.x-p.x)*K[j];p.y+=(t.y-p.y)*K[j];els[j].style.transform='translate3d('+p.x+'px,'+p.y+'px,0)'});
+  requestAnimationFrame(tick)})();
+ addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;root.classList.add('has-cur','cur-on')},{passive:true});
+ root.addEventListener('mouseleave',()=>root.classList.remove('cur-on'));
+ root.addEventListener('mouseenter',()=>root.classList.add('cur-on'));
+ addEventListener('mouseover',e=>root.classList.toggle('cur-hot',!!(e.target.closest&&e.target.closest('a,button,summary,label,select,input,textarea,.proj'))));
+ addEventListener('mousedown',()=>root.classList.add('cur-down'));addEventListener('mouseup',()=>root.classList.remove('cur-down'));
+})();
+
+// Efek miring kartu proyek (hanya mouse)
+if(matchMedia('(hover:hover)').matches&&!reduce)$$('.proj').forEach(c=>{
+ c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.setProperty('--ry',(x*8)+'deg');c.style.setProperty('--rx',(-y*8)+'deg')});
+ c.addEventListener('mouseleave',()=>{c.style.removeProperty('--rx');c.style.removeProperty('--ry')})});
+</script>
+</body>
+</html>
